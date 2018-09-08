@@ -2,6 +2,7 @@ import { createStackNavigator } from 'react-navigation';
 import HouseDetail from '../pages/House/Detail';
 import MessageDetail from '../pages/Message/Detail';
 import Home from '../pages/Home/Home';
+import Login from '../pages/Login/Login';
 
 const App = createStackNavigator(
   {
@@ -12,9 +13,16 @@ const App = createStackNavigator(
       })
     },
     HouseDetail: { screen: HouseDetail },
-    MessageDetail: { screen: MessageDetail }
+    MessageDetail: { screen: MessageDetail },
+    Login: {
+      screen: Login,
+      navigationOptions: ({ navigation }) => ({
+        header: null
+      })
+    }
   },
   {
+    initialRouteName: 'Home',
     headerMode: 'screen',
     navigationOptions: {
       headerStyle: {

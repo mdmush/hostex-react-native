@@ -14,18 +14,18 @@ export default class Messages extends React.Component {
   }
 
   fetchData() {
-    return fetch(
-      'https://easy-mock.com/mock/5a22accb99343b5fc8079a26/api/chat/chat_list#!method=get'
-    )
+    return fetch('https://www.myhostex.com/mobile_api/chat/chat_list?page=1')
       .then(res => res.json())
       .then(resJSON => {
+        console.log('MESSAGE: ', resJSON);
         this.setState({
           dataSource: resJSON.data.list,
           isRefreshing: false
         });
+        console.log('message: ', resJSON);
         // console.log(this.state.dataSource);
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log('message: ', err));
   }
 
   keyExtractor = (index, item) => item.id;

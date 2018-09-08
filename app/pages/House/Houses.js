@@ -15,7 +15,7 @@ export default class HouseList extends React.Component {
 
   fetchData() {
     return fetch(
-      'https://easy-mock.com/mock/5a22accb99343b5fc8079a26/api/house/search#!method=get'
+      'https://www.myhostex.com/mobile_api/house_relation/hostex_house_list?page=1&page_size=20'
     )
       .then(res => res.json())
       .then(resJSON => {
