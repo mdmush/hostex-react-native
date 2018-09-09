@@ -1,12 +1,16 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import _ from 'lodash';
+
+const defaultSource = require('../../assets/default_pic.png');
+
 const ItemCell = ({ data, onPressHandler }) => (
   <TouchableOpacity onPress={() => onPressHandler(data)}>
     <View style={styles.container}>
       <Image
         style={styles.itemImg}
         source={{ uri: _.get(data, 'house_pictrue.original_url') }}
+        defaultSource={defaultSource}
       />
       <View style={styles.itemRightContent}>
         <Text style={styles.title}>

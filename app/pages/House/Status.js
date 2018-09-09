@@ -5,7 +5,7 @@ export default class HouseStatus extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>fuck I am house status</Text>
+        <Text>this is status page</Text>
       </View>
     );
   }
@@ -14,7 +14,7 @@ export default class HouseStatus extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 22,
+    paddingTop: 20,
     flexDirection: 'column',
     backgroundColor: '#fff'
   }

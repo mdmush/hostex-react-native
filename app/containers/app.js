@@ -13,7 +13,12 @@ const App = createStackNavigator(
         header: null
       })
     },
-    HouseDetail: { screen: HouseDetail },
+    HouseDetail: {
+      screen: HouseDetail,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
     MessageDetail: { screen: MessageDetail },
     Login: {
       screen: Login,
@@ -24,7 +29,7 @@ const App = createStackNavigator(
     More: { screen: More }
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Login',
     headerMode: 'screen',
     navigationOptions: {
       headerStyle: {

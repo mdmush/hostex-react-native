@@ -18,30 +18,30 @@ export default class Mine extends React.Component {
         <View style={styles.body}>
           <View style={styles.card}>
             <TouchableOpacity style={[styles.item, styles.itemWithBorder]}>
-              <Icon name="md-home" size={25} style={styles.icon} />
+              <Icon name="md-clipboard" size={20} style={styles.icon} />
               <Text>订单</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.item}>
-              <Icon name="md-home" size={25} style={styles.icon} />
+              <Icon name="md-stats" size={20} style={styles.icon} />
               <Text>统计</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.card}>
             <TouchableOpacity style={styles.item}>
-              <Icon name="md-home" size={25} style={styles.icon} />
+              <Icon name="md-brush" size={20} style={styles.icon} />
               <Text>记一笔</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.card}>
             <TouchableOpacity style={[styles.item, styles.itemWithBorder]}>
-              <Icon name="md-home" size={25} style={styles.icon} />
+              <Icon name="md-home" size={20} style={styles.icon} />
               <Text>渠道账号管理</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.item}
               onPress={() => this.props.navigation.navigate('More')}
             >
-              <Icon name="md-home" size={25} style={styles.icon} />
+              <Icon name="md-keypad" size={20} style={styles.icon} />
               <Text>更多</Text>
             </TouchableOpacity>
           </View>
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   icon: {
-    marginRight: 20
+    marginRight: 20,
+    color: '#999'
   }
 });

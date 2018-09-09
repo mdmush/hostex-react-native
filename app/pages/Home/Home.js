@@ -13,7 +13,7 @@ export default createBottomTabNavigator(
       navigationOptions: ({ navigation }) => ({
         tabBarLabel: '消息',
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="md-home" size={25} color={tintColor} />
+          <Icon name="md-chatboxes" size={25} color={tintColor} />
         )
       })
     },
@@ -22,7 +22,7 @@ export default createBottomTabNavigator(
       navigationOptions: () => ({
         tabBarLabel: '房态',
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="md-home" size={25} color={tintColor} />
+          <Icon name="md-list-box" size={25} color={tintColor} />
         )
       })
     },
@@ -40,7 +40,7 @@ export default createBottomTabNavigator(
       navigationOptions: () => ({
         tabBarLabel: '我的',
         tabBarIcon: ({ tintColor }) => (
-          <Icon name="md-home" size={25} color={tintColor} />
+          <Icon name="md-person-add" size={25} color={tintColor} />
         )
       })
     }
