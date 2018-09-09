@@ -14,7 +14,9 @@ export default class Messages extends React.Component {
   }
 
   fetchData() {
-    return fetch('https://www.myhostex.com/mobile_api/chat/chat_list?page=1')
+    return fetch('https://www.myhostex.com/mobile_api/chat/chat_list?page=1', {
+      credentials: 'include'
+    })
       .then(res => res.json())
       .then(resJSON => {
         console.log('MESSAGE: ', resJSON);

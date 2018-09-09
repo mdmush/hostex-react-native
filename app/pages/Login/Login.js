@@ -16,20 +16,27 @@ export default class Login extends React.Component {
 
   login = () => {
     return fetch('https://www.myhostex.com/mobile_api/user/login', {
+      credentials: 'include',
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({
         username: this.state.username,
         password: this.state.password
       })
     })
-      .then(result => result.json())
+      .then(result => {
+        console.log('login:', result);
+        return result.json();
+      })
       .then(res => {
         console.log('login success');
         const { navigate } = this.props.navigation;
-        navigate('HouseList');
+        navigate('MessageList');
       })
       .catch(err => {
-        console.log('login fail');
+        console.log('login fail', err);
       });
   };
 

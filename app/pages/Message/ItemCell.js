@@ -4,10 +4,12 @@ import _ from 'lodash';
 const ItemCell = ({ data, onPressHandler }) => (
   <TouchableOpacity onPress={() => onPressHandler(data)}>
     <View style={styles.container}>
-      <Image
-        style={styles.itemImg}
-        source={{ uri: _.get(data, 'thirdparty_tenant_customer.photo') }}
-      />
+      <View style={styles.itemImg}>
+        <Image
+          source={{ uri: _.get(data, 'thirdparty_tenant_customer.photo') }}
+          style={{ width: 50, height: 50 }}
+        />
+      </View>
       <View style={styles.itemRightContent}>
         <View style={styles.itemRightTop}>
           <Text style={styles.gray}>
@@ -38,7 +40,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: '#b0b0b0'
+    borderColor: '#b0b0b0',
+    overflow: 'hidden'
   },
   itemRightContent: {
     flex: 1,

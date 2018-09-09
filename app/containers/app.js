@@ -3,6 +3,7 @@ import HouseDetail from '../pages/House/Detail';
 import MessageDetail from '../pages/Message/Detail';
 import Home from '../pages/Home/Home';
 import Login from '../pages/Login/Login';
+import More from '../pages/Setting/More';
 
 const App = createStackNavigator(
   {
@@ -19,7 +20,8 @@ const App = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         header: null
       })
-    }
+    },
+    More: { screen: More }
   },
   {
     initialRouteName: 'Home',

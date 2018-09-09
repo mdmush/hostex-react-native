@@ -15,17 +15,21 @@ export default class HouseList extends React.Component {
 
   fetchData() {
     return fetch(
-      'https://www.myhostex.com/mobile_api/house_relation/hostex_house_list?page=1&page_size=20'
+      'https://www.myhostex.com/mobile_api/house_relation/hostex_house_list?page=1&page_size=20',
+      {
+        credentials: 'include'
+      }
     )
       .then(res => res.json())
       .then(resJSON => {
+        console.log('house: ', resJSON);
         this.setState({
           dataSource: resJSON.data.list,
           isRefreshing: false
         });
       })
       .catch(err => {
-        console.log(err);
+        console.log('house: ', err);
       });
   }
   onPress = () => {

@@ -37,7 +37,10 @@ export default class Mine extends React.Component {
               <Icon name="md-home" size={25} style={styles.icon} />
               <Text>渠道账号管理</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => this.props.navigation.navigate('More')}
+            >
               <Icon name="md-home" size={25} style={styles.icon} />
               <Text>更多</Text>
             </TouchableOpacity>
