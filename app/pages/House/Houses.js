@@ -1,16 +1,26 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View, Text, TextInput } from 'react-native';
 import ItemListView from './ItemListView';
 import ItemCell from './ItemCell';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as houseCreators from '../../actions/houses';
 
-export default class HouseList extends React.Component {
+const propTypes = {
+  houseActions: PropTypes.object,
+  houses: PropTypes.object.isRequired
+};
+
+class HouseList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { dataSource: [], isRefreshing: false };
   }
 
   componentDidMount() {
-    this.fetchData();
+    const { houseActions } = this.props;
+    houseActions.requestHouseList();
   }
 
   fetchData() {
@@ -42,9 +52,10 @@ export default class HouseList extends React.Component {
   };
 
   renderList = dataSource => {
+    const { houses } = this.props;
     return (
       <ItemListView
-        dataSource={dataSource}
+        dataSource={houses.houseList}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
         onRefresh={this.fetchData}
@@ -54,6 +65,17 @@ export default class HouseList extends React.Component {
   };
 
   render() {
+    const { houses } = this.props;
+    const isEmpty =
+      houses.houseList === undefined || houses.houseList.length === 0;
+    if (isEmpty) {
+      return (
+        <View>
+          <Text>fuck</Text>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.bar}>
@@ -99,3 +121,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2'
   }
 });
+
+HouseList.protTypes = propTypes;
+
+const mapStateToProps = state => {
+  const { houses } = state;
+  return {
+    houses
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  const houseActions = bindActionCreators(houseCreators, dispatch);
+  return {
+    houseActions
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HouseList);

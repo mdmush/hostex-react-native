@@ -1,6 +1,8 @@
 import { createStore, applyMiddleware } from 'redux';
 import createSageMiddleware, { END } from 'redux-saga';
 
+import rootReducer from '../reducers/index';
+
 const middlewares = [];
 const { logger } = require('redux-logger');
 
@@ -14,7 +16,7 @@ if (__DEV__) {
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
 
 export default function configureStore(initialState) {
-  const store = createStoreWithMiddleware();
+  const store = createStoreWithMiddleware(rootReducer, initialState);
 
   store.runSaga = sagaMiddleware.run;
   store.close = () => store.dispatch(END);
