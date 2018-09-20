@@ -8,6 +8,7 @@ import Houses from '../pages/House/Houses';
 import HouseStatus from '../pages/House/Status';
 import Messages from '../pages/Message/Messages';
 import Mine from '../pages/Setting/Mine';
+import Workbench from '../pages/Workbench/Workbench';
 
 import HouseDetail from '../pages/House/Detail';
 import MessageDetail from '../pages/Message/Detail';
@@ -18,7 +19,7 @@ const TabContainer = createBottomTabNavigator(
   {
     MessageList: {
       screen: Messages,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: () => ({
         tabBarLabel: '消息',
         tabBarIcon: ({ tintColor }) => (
           <Icon name="md-chatboxes" size={25} color={tintColor} />
@@ -29,6 +30,15 @@ const TabContainer = createBottomTabNavigator(
       screen: HouseStatus,
       navigationOptions: () => ({
         tabBarLabel: '房态',
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="md-list-box" size={25} color={tintColor} />
+        )
+      })
+    },
+    Workbench: {
+      screen: Workbench,
+      navigationOptions: () => ({
+        tabBarLabel: '工作台',
         tabBarIcon: ({ tintColor }) => (
           <Icon name="md-list-box" size={25} color={tintColor} />
         )

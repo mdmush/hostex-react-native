@@ -3,6 +3,7 @@ import RequestUtil from '../utils/RequestUtil';
 import * as types from '../constants/ActionTypes';
 import { fetchHouseList, receiveHouseList } from '../actions/houses';
 export function* requestHouseList() {
+  console.log('request house list');
   try {
     yield put(fetchHouseList());
     const houseList = yield call(
@@ -11,7 +12,6 @@ export function* requestHouseList() {
       'get'
     );
     yield put(receiveHouseList(houseList.data.list));
-    // console.log('HOUSE LIST');
   } catch (error) {}
 }
 

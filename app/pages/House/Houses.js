@@ -23,25 +23,30 @@ class HouseList extends React.Component {
     houseActions.requestHouseList();
   }
 
-  fetchData() {
-    return fetch(
-      'https://www.myhostex.com/mobile_api/house_relation/hostex_house_list?page=1&page_size=20',
-      {
-        credentials: 'include'
-      }
-    )
-      .then(res => res.json())
-      .then(resJSON => {
-        console.log('house: ', resJSON);
-        this.setState({
-          dataSource: resJSON.data.list,
-          isRefreshing: false
-        });
-      })
-      .catch(err => {
-        console.log('house: ', err);
-      });
-  }
+  // fetchData() {
+  //   return fetch(
+  //     'https://www.myhostex.com/mobile_api/house_relation/hostex_house_list?page=1&page_size=20',
+  //     {
+  //       credentials: 'include'
+  //     }
+  //   )
+  //     .then(res => res.json())
+  //     .then(resJSON => {
+  //       console.log('house: ', resJSON);
+  //       this.setState({
+  //         dataSource: resJSON.data.list,
+  //         isRefreshing: false
+  //       });
+  //     })
+  //     .catch(err => {
+  //       console.log('house: ', err);
+  //     });
+  // }
+  onRefresh = () => {
+    const { houseActions } = this.props;
+    houseActions.requestHouseList();
+  };
+
   onPress = () => {
     const { navigate } = this.props.navigation;
     navigate('HouseDetail');
@@ -52,13 +57,13 @@ class HouseList extends React.Component {
   };
 
   renderList = dataSource => {
-    const { houses } = this.props;
+    const { houses, houseActions } = this.props;
     return (
       <ItemListView
         dataSource={houses.houseList}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
-        onRefresh={this.fetchData}
+        onRefresh={this.onRefresh}
         isRefreshing={this.state.isRefreshing}
       />
     );
@@ -66,12 +71,13 @@ class HouseList extends React.Component {
 
   render() {
     const { houses } = this.props;
+    console.log('houses', houses);
     const isEmpty =
       houses.houseList === undefined || houses.houseList.length === 0;
     if (isEmpty) {
       return (
         <View>
-          <Text>fuck</Text>
+          <Text>empty</Text>
         </View>
       );
     }

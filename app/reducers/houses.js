@@ -12,6 +12,7 @@ export default function houses(state = initialState, action) {
         loading: true
       });
     case types.RECEIVE_HOUSE_LIST:
+      console.log('action.houselist: ', action.houseList);
       return Object.assign({}, state, {
         loading: false,
         houseList: action.houseList

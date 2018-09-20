@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Picker } from 'react-native';
+import { StyleSheet, View, Text, Picker, Platform } from 'react-native';
 import ItemListView from './ItemListView';
 import ItemCell from './ItemCell';
 
@@ -19,12 +19,10 @@ export default class Messages extends React.Component {
     })
       .then(res => res.json())
       .then(resJSON => {
-        console.log('MESSAGE: ', resJSON);
         this.setState({
           dataSource: resJSON.data.list,
           isRefreshing: false
         });
-        console.log('message: ', resJSON);
         // console.log(this.state.dataSource);
       })
       .catch(err => console.log('message: ', err));
@@ -69,7 +67,7 @@ export default class Messages extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: Platform.OS === 'ios' ? 20 : 0,
     flexDirection: 'column',
     backgroundColor: '#fff'
   },

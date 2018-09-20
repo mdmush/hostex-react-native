@@ -12,6 +12,9 @@ const source = require('../../assets/pic_mine_banner.png');
 
 export default class Mine extends React.Component {
   render() {
+    console.log('++ get data ++');
+    const param = this.props.navigation.getParam('data');
+    console.log('++ params:  ++', param);
     return (
       <View style={styles.container}>
         <ImageBackground source={source} style={styles.banner} />

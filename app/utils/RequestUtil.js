@@ -1,4 +1,8 @@
+import Navigator from './Navigator';
+import ToastUtil from './ToastUtil';
+
 const baseUrl = 'https://myhostex.com/';
+// const baseUrl = 'https:192.168.4.140:8080/';
 
 const request = (url, method, body) => {
   let isOk;
@@ -20,6 +24,12 @@ const request = (url, method, body) => {
         return response.json();
       })
       .then(responseData => {
+        console.log('responseData');
+        if (responseData.error_code === 210001) {
+          ToastUtil.showShort('登录已失效，请重新登录');
+          Navigator.navigate('Login');
+          return;
+        }
         if (isOk) {
           resolve(responseData);
         } else {
