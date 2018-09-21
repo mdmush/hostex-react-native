@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   StyleSheet,
+  ScrollView,
   View,
   Text,
   ImageBackground,
@@ -12,11 +13,9 @@ const source = require('../../assets/pic_mine_banner.png');
 
 export default class Mine extends React.Component {
   render() {
-    console.log('++ get data ++');
     const param = this.props.navigation.getParam('data');
-    console.log('++ params:  ++', param);
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <ImageBackground source={source} style={styles.banner} />
         <View style={styles.body}>
           <View style={styles.card}>
@@ -24,15 +23,39 @@ export default class Mine extends React.Component {
               <Icon name="md-clipboard" size={20} style={styles.icon} />
               <Text>订单</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={[styles.item, styles.itemWithBorder]}>
+              <Icon name="md-stats" size={20} style={styles.icon} />
+              <Text>运营统计</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.item}>
               <Icon name="md-stats" size={20} style={styles.icon} />
-              <Text>统计</Text>
+              <Text>财务明细</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.card}>
             <TouchableOpacity style={styles.item}>
               <Icon name="md-brush" size={20} style={styles.icon} />
               <Text>记一笔</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.card}>
+            <TouchableOpacity style={[styles.item, styles.itemWithBorder]}>
+              <Icon name="md-home" size={20} style={styles.icon} />
+              <Text>民宿微店</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => this.props.navigation.navigate('More')}
+            >
+              <Icon name="md-keypad" size={20} style={styles.icon} />
+              <Text>短信服务</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => this.props.navigation.navigate('More')}
+            >
+              <Icon name="md-keypad" size={20} style={styles.icon} />
+              <Text>子账号管理</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.card}>
@@ -49,7 +72,7 @@ export default class Mine extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

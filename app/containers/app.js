@@ -15,6 +15,8 @@ import MessageDetail from '../pages/Message/Detail';
 import Login from '../pages/Login/Login';
 import More from '../pages/Setting/More';
 
+import Splash from '../pages/Splash';
+
 const TabContainer = createBottomTabNavigator(
   {
     MessageList: {
@@ -64,6 +66,7 @@ const TabContainer = createBottomTabNavigator(
     }
   },
   {
+    initialRouteName: 'Workbench',
     tabBarOptions: {
       //当前选中的tab bar的文本颜色和图标颜色
       activeTintColor: '#4BC1D2',
@@ -110,10 +113,16 @@ const TabContainer = createBottomTabNavigator(
 
 const App = createStackNavigator(
   {
+    Splash: {
+      screen: Splash,
+      navigationOptions: () => ({
+        header: null
+      })
+    },
     Home: {
       // screen: Home,
       screen: TabContainer,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: () => ({
         header: null
       })
     },
@@ -126,14 +135,14 @@ const App = createStackNavigator(
     MessageDetail: { screen: MessageDetail },
     Login: {
       screen: Login,
-      navigationOptions: ({ navigation }) => ({
+      navigationOptions: () => ({
         header: null
       })
     },
     More: { screen: More }
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Splash',
     headerMode: 'screen',
     navigationOptions: {
       headerStyle: {

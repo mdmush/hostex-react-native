@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  ActivityIndicator
+} from 'react-native';
 import ItemListView from './ItemListView';
 import ItemCell from './ItemCell';
 import { connect } from 'react-redux';
@@ -15,7 +21,6 @@ const propTypes = {
 class HouseList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { dataSource: [], isRefreshing: false };
   }
 
   componentDidMount() {
@@ -23,25 +28,6 @@ class HouseList extends React.Component {
     houseActions.requestHouseList();
   }
 
-  // fetchData() {
-  //   return fetch(
-  //     'https://www.myhostex.com/mobile_api/house_relation/hostex_house_list?page=1&page_size=20',
-  //     {
-  //       credentials: 'include'
-  //     }
-  //   )
-  //     .then(res => res.json())
-  //     .then(resJSON => {
-  //       console.log('house: ', resJSON);
-  //       this.setState({
-  //         dataSource: resJSON.data.list,
-  //         isRefreshing: false
-  //       });
-  //     })
-  //     .catch(err => {
-  //       console.log('house: ', err);
-  //     });
-  // }
   onRefresh = () => {
     const { houseActions } = this.props;
     houseActions.requestHouseList();
@@ -57,21 +43,27 @@ class HouseList extends React.Component {
   };
 
   renderList = dataSource => {
-    const { houses, houseActions } = this.props;
+    const { houses } = this.props;
     return (
       <ItemListView
         dataSource={houses.houseList}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
         onRefresh={this.onRefresh}
-        isRefreshing={this.state.isRefreshing}
       />
     );
   };
 
   render() {
     const { houses } = this.props;
-    console.log('houses', houses);
+
+    if (houses.loading) {
+      return (
+        <View style={[styles.container, { justifyContent: 'center' }]}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     const isEmpty =
       houses.houseList === undefined || houses.houseList.length === 0;
     if (isEmpty) {
@@ -91,7 +83,7 @@ class HouseList extends React.Component {
         <View style={styles.inputWrapper}>
           <TextInput style={styles.input} placeholder="搜索" />
         </View>
-        {this.renderList(this.state.dataSource)}
+        {this.renderList(houses.houseList)}
       </View>
     );
   }
