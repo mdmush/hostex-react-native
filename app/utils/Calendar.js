@@ -4,25 +4,36 @@ import momentLocale from 'moment/locale/zh-cn';
 
 moment.updateLocale('zh-cn', momentLocale);
 
+/** 月日历的默认参数 */
 const showYear = moment().year();
 const showMonth = moment().month();
 
-const weeksCalendar: Array<{
-  days: Array<{
-    number: number,
-    isLastMonth: boolean,
-    isNextMonth: boolean,
-    isPastDay: boolean,
-    isToday: boolean,
-    title: string,
-    date: Moment,
+/** 水平日历的默认参数 */
+const defaultStart = moment()
+  .subtract(1, 'year')
+  .startOf('d');
+const defaultEnd = moment()
+  .add(3, 'year')
+  .startOf('d');
 
-    data: any
-  }>
-}> = [];
+// console.log('start: ', start, ' end: ', end);
+// const weeksCalendar: Array<{
+//   days: Array<{
+//     number: number,
+//     isLastMonth: boolean,
+//     isNextMonth: boolean,
+//     isPastDay: boolean,
+//     isToday: boolean,
+//     title: string,
+//     date: Moment,
 
-const listOfWeekName: Array<string> = [];
+//     data: any
+//   }>
+// }> = [];
 
+// const listOfWeekName: Array<string> = [];
+
+/** 构建一个月日历 */
 const buildCalendar = (year = showYear, month = showMonth) => {
   const date = moment()
     .year(year)
@@ -31,6 +42,28 @@ const buildCalendar = (year = showYear, month = showMonth) => {
   const weeksCalendar = buildMonth(date);
 
   return { weeksCalendar, listOfWeekName };
+};
+
+const buildHorizontalCalendar = (start = defaultStart, end = defaultEnd) => {
+  const total = offset(start, end);
+  const days = [];
+  let date = start.clone();
+  for (let i = 0; i < total; i++) {
+    days.push({
+      title: date.format('YYYY-MM-DD'),
+      date: date,
+      number: date.date(),
+      day: date.day(),
+      isLastMonth: date.month() < moment().month(),
+      isNextMonth: date.month() > moment().month(),
+      isToday: date.isSame(moment(), 'day')
+    });
+
+    date = date.clone();
+    date.add(1, 'd');
+  }
+
+  return days;
 };
 
 const buildMonth = (date: Moment) => {
@@ -86,6 +119,12 @@ const removeTime = (date: Moment) => {
     .millisecond(0);
 };
 
+/** end 与 start之间的日期差 */
+const offset = (start: moment, end: moment) => {
+  return moment(end).diff(start, 'd');
+};
+
 export default {
-  buildCalendar
+  buildCalendar,
+  buildHorizontalCalendar
 };
