@@ -12,13 +12,17 @@ import WeChatUtil from '../../utils/Share';
 const shareIconWechat = require('../../assets/share_icon_wechat.png');
 const shareIconMoments = require('../../assets/share_icon_moments.png');
 
-const Cards = () => (
+const Cards = ({
+  onPressStat,
+  onPressEmpty,
+  onPressCheckin,
+  onPressCheckout
+}) => (
   <View>
     <TouchableOpacity
       style={styles.card}
       onPress={() => {
         WeChatUtil.shareToTimeline({
-          target: 'session',
           title: '你好，我是测试',
           description: '你好，我是测试的description',
           thumbImage: '',
@@ -61,7 +65,10 @@ const Cards = () => (
         </Text>
         <Text style={[styles.textAlignCenter, styles.textNormal]}>75</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.card, styles.cardCol]}>
+      <TouchableOpacity
+        style={[styles.card, styles.cardCol]}
+        onPress={onPressEmpty}
+      >
         <Text style={[styles.textAlignCenter, styles.textNormal]}>
           今日空房
         </Text>
@@ -69,7 +76,10 @@ const Cards = () => (
       </TouchableOpacity>
     </View>
     <View style={styles.cardRow}>
-      <TouchableOpacity style={[styles.card, styles.cardCol]}>
+      <TouchableOpacity
+        style={[styles.card, styles.cardCol]}
+        onPress={onPressEmpty}
+      >
         <Text style={[styles.textAlignCenter, styles.textNormal]}>
           明日空房
         </Text>

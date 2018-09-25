@@ -14,6 +14,7 @@ import HouseDetail from '../pages/House/Detail';
 import MessageDetail from '../pages/Message/Detail';
 import Login from '../pages/Login/Login';
 import More from '../pages/Setting/More';
+import EmptyHouses from '../pages/Workbench/EmptyHouses';
 
 import Splash from '../pages/Splash';
 
@@ -139,7 +140,8 @@ const App = createStackNavigator(
         header: null
       })
     },
-    More: { screen: More }
+    More: { screen: More },
+    EmptyHouses: { screen: EmptyHouses }
   },
   {
     initialRouteName: 'Splash',

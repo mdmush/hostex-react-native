@@ -1,11 +1,11 @@
 import moment from 'moment';
 import { Moment } from 'moment';
+import momentLocale from 'moment/locale/zh-cn';
 
-const locale = 'zh-cn';
+moment.updateLocale('zh-cn', momentLocale);
+
 const showYear = moment().year();
 const showMonth = moment().month();
-
-moment.locale(locale);
 
 const weeksCalendar: Array<{
   days: Array<{
@@ -24,12 +24,9 @@ const weeksCalendar: Array<{
 const listOfWeekName: Array<string> = [];
 
 const buildCalendar = (year = showYear, month = showMonth) => {
-  // moment.locale(locale);
-
   const date = moment()
     .year(year)
     .month(month);
-  console.log('date: ', date);
   const listOfWeekName = moment.weekdaysMin();
   const weeksCalendar = buildMonth(date);
 
@@ -39,7 +36,6 @@ const buildCalendar = (year = showYear, month = showMonth) => {
 const buildMonth = (date: Moment) => {
   const weeks = [];
   const dateWithoutTime = removeTime(date);
-
   const start = dateWithoutTime
     .clone()
     .date(1)

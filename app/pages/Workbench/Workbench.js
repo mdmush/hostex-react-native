@@ -9,11 +9,17 @@ export default class Workbench extends React.Component {
   constructor(props) {
     super(props);
     const d = Calendar.buildCalendar();
-    console.log(d);
   }
 
   renderCards = () => {
-    return <Cards />;
+    return (
+      <Cards
+        onPressStat={() => this.handlePress('stat')}
+        onPressEmpty={() => this.handlePress('empty')}
+        onPressCheckin={() => this.handlePress('checkin')}
+        onPressCheckout={() => this.handlePress('checkout')}
+      />
+    );
   };
 
   renderList = () => {
@@ -24,6 +30,11 @@ export default class Workbench extends React.Component {
 
   renderItem = () => {
     return <ItemCell />;
+  };
+
+  handlePress = route => {
+    const { navigate } = this.props.navigation;
+    navigate('EmptyHouses');
   };
 
   render() {
