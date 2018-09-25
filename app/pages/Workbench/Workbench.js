@@ -2,11 +2,14 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet, Platform } from 'react-native';
 import Cards from './Cards';
 import ItemCell from './ItemCell';
+import Calendar from '../../utils/Calendar';
 import _ from 'lodash';
 
 export default class Workbench extends React.Component {
   constructor(props) {
     super(props);
+    const d = Calendar.buildCalendar();
+    console.log(d);
   }
 
   renderCards = () => {
@@ -17,9 +20,6 @@ export default class Workbench extends React.Component {
     const arr = [1, 2, 3, 4];
     const list = _.map(arr, i => this.renderItem());
     return <View style={{ marginBottom: 60 }}>{list}</View>;
-    // return (
-    //   { _.map(arr, i => this.renderItem()) }
-    // );
   };
 
   renderItem = () => {

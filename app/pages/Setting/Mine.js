@@ -87,10 +87,13 @@ const styles = StyleSheet.create({
     height: 220
   },
   body: {
-    position: 'absolute',
-    top: 180,
-    left: 20,
-    right: 20
+    flex: 1
+    // position: 'absolute',
+    // top: 180,
+    // left: 20,
+    // right: 20,
+    // bottom: 0,
+    // zIndex: 100
   },
   card: {
     backgroundColor: '#fff',
