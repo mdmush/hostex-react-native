@@ -24,7 +24,7 @@ class HorizontalCalendar extends React.Component {
     this.state = {
       dates: Calendar.buildHorizontalCalendar(
         Calendar.defaultStart,
-        Calendar.defaultStart.add(10, 'd')
+        Calendar.defaultStart.clone().add(10, 'd')
       )
     };
   }
@@ -55,17 +55,29 @@ class HorizontalCalendar extends React.Component {
         </View>
         <View style={styles.houses}>
           <View style={styles.houseCell}>
-            <Text style={styles.houseCellText} numberOfLines={2}>
+            <Text
+              style={styles.houseCellText}
+              allowFontScaling={false}
+              numberOfLines={2}
+            >
               8号线永泰庄地铁8号线永泰庄地铁8号线永泰庄地铁8号线永泰庄地铁
             </Text>
           </View>
           <View style={styles.houseCell}>
-            <Text style={styles.houseCellText} numberOfLines={2}>
+            <Text
+              style={styles.houseCellText}
+              allowFontScaling={false}
+              numberOfLines={2}
+            >
               8号线永泰庄地铁
             </Text>
           </View>
           <View style={styles.houseCell}>
-            <Text style={styles.houseCellText} numberOfLines={2}>
+            <Text
+              style={styles.houseCellText}
+              allowFontScaling={false}
+              numberOfLines={2}
+            >
               8号线永泰庄地铁
             </Text>
           </View>
@@ -90,6 +102,10 @@ class HorizontalCalendar extends React.Component {
     );
   };
 
+  renderCell = () => {
+    return <TouchableOpacity style={styles.calBodyCell} />;
+  };
+
   render() {
     return (
       <View style={styles.table}>
@@ -97,7 +113,10 @@ class HorizontalCalendar extends React.Component {
         <FlatList
           style={styles.calendarContainer}
           horizontal={true}
+          bounces={false}
           initialNumToRender={10}
+          snapToAlignment="start"
+          snapToInterval={calBodyCellWidth}
           getItemLayout={(data, index) => ({
             length: calBodyCellWidth,
             offset: calBodyCellWidth * index,
@@ -148,7 +167,7 @@ const styles = StyleSheet.create({
   },
   houseCellText: {
     textAlign: 'center',
-    fontSize: 14
+    fontSize: 12
   },
   calenderContainer: {
     height: '100%',

@@ -17,13 +17,16 @@ export default class Messages extends React.Component {
     return fetch('https://www.myhostex.com/mobile_api/chat/chat_list?page=1', {
       credentials: 'include'
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log('res: ', res);
+        return res.json();
+      })
       .then(resJSON => {
         this.setState({
           dataSource: resJSON.data.list,
           isRefreshing: false
         });
-        // console.log(this.state.dataSource);
+        console.log(this.state.dataSource);
       })
       .catch(err => console.log('message: ', err));
   }
