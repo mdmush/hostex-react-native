@@ -3,10 +3,13 @@ import {
   View,
   Text,
   FlatList,
+  TouchableOpacity,
   StyleSheet,
   InteractionManager
 } from 'react-native';
+import DatePicker from 'react-native-datepicker';
 import Calendar from '../utils/Calendar';
+import moment from 'moment';
 
 const calBodyCellWidth = 40;
 const calBodyCellHeight = 40;
@@ -18,12 +21,19 @@ const headerHeight = 40;
 class HorizontalCalendar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { dates: [] };
+    this.state = {
+      dates: Calendar.buildHorizontalCalendar(
+        Calendar.defaultStart,
+        Calendar.defaultStart.add(10, 'd')
+      )
+    };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      this.setState({ dates: Calendar.buildHorizontalCalendar() });
+      this.setState({
+        dates: Calendar.buildHorizontalCalendar()
+      });
     });
   }
 
@@ -31,12 +41,22 @@ class HorizontalCalendar extends React.Component {
     return (
       <View style={styles.header}>
         <View style={styles.datePicker}>
-          <Text style={styles}>2018-08</Text>
+          <DatePicker
+            style={{ width: headerWidth }}
+            showIcon={false}
+            mode="date"
+            format="YYYY-MM"
+            minDate={Calendar.defaultStart.format('YYYY-MM')}
+            maxDate={Calendar.defaultEnd.format('YYYY-MM')}
+            customStyles={{
+              dateInput: { borderWidth: 0 }
+            }}
+          />
         </View>
         <View style={styles.houses}>
           <View style={styles.houseCell}>
             <Text style={styles.houseCellText} numberOfLines={2}>
-              8号线永泰庄地铁
+              8号线永泰庄地铁8号线永泰庄地铁8号线永泰庄地铁8号线永泰庄地铁
             </Text>
           </View>
           <View style={styles.houseCell}>
@@ -55,17 +75,16 @@ class HorizontalCalendar extends React.Component {
   };
 
   renderCalendar = date => {
-    // console.log(date);
     return (
       <View style={styles.calendar}>
         <View style={styles.calHeaderCell}>
-          <Text style={styles.calHeaderText}>{date.day}</Text>
+          <Text style={styles.calHeaderText}>{date.dayCN}</Text>
           <Text style={styles.calHeaderText}>{date.number}</Text>
         </View>
         <View style={styles.calBody}>
-          <View style={styles.calBodyCell} />
-          <View style={styles.calBodyCell} />
-          <View style={styles.calBodyCell} />
+          <TouchableOpacity style={styles.calBodyCell} />
+          <TouchableOpacity style={styles.calBodyCell} />
+          <TouchableOpacity style={styles.calBodyCell} />
         </View>
       </View>
     );
@@ -103,19 +122,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   header: {
-    width: headerWidth,
-    backgroundColor: 'green'
+    width: headerWidth
   },
   datePicker: {
     textAlign: 'center',
-    height: calHeaderCellHeight
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: calHeaderCellHeight,
+    borderColor: '#a7a7a7',
+    borderRightWidth: 1
+  },
+  houses: {
+    borderColor: '#a7a7a7',
+    borderBottomWidth: 1
   },
   houseCell: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 5,
     paddingRight: 5,
-    height: headerHeight
+    height: headerHeight,
+    borderColor: '#a7a7a7',
+    borderTopWidth: 1,
+    borderRightWidth: 1
   },
   houseCellText: {
     textAlign: 'center',

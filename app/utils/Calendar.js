@@ -45,6 +45,7 @@ const buildCalendar = (year = showYear, month = showMonth) => {
 };
 
 const buildHorizontalCalendar = (start = defaultStart, end = defaultEnd) => {
+  const weekdayNames = moment.weekdaysMin();
   const total = offset(start, end);
   const days = [];
   let date = start.clone();
@@ -54,6 +55,7 @@ const buildHorizontalCalendar = (start = defaultStart, end = defaultEnd) => {
       date: date,
       number: date.date(),
       day: date.day(),
+      dayCN: weekdayNames[date.day()],
       isLastMonth: date.month() < moment().month(),
       isNextMonth: date.month() > moment().month(),
       isToday: date.isSame(moment(), 'day')
@@ -62,7 +64,6 @@ const buildHorizontalCalendar = (start = defaultStart, end = defaultEnd) => {
     date = date.clone();
     date.add(1, 'd');
   }
-
   return days;
 };
 
@@ -125,6 +126,8 @@ const offset = (start: moment, end: moment) => {
 };
 
 export default {
+  defaultStart,
+  defaultEnd,
   buildCalendar,
   buildHorizontalCalendar
 };
