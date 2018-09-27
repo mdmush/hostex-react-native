@@ -124,8 +124,9 @@ const App = createStackNavigator(
     Home: {
       // screen: Home,
       screen: TabContainer,
-      navigationOptions: () => ({
-        header: null
+      navigationOptions: ({ navigation }) => ({
+        header: null,
+        gesturesEnabled: false
       })
     },
     HouseDetail: {

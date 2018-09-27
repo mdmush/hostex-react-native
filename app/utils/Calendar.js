@@ -56,8 +56,8 @@ const buildHorizontalCalendar = (start = defaultStart, end = defaultEnd) => {
       number: date.date(),
       day: date.day(),
       dayCN: weekdayNames[date.day()],
-      isLastMonth: date.month() < moment().month(),
-      isNextMonth: date.month() > moment().month(),
+      // isLastMonth: date.month() < moment().month(),
+      // isNextMonth: date.month() > moment().month(),
       isToday: date.isSame(moment(), 'day')
     });
 

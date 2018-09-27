@@ -12,6 +12,9 @@ import {
 const source = require('../../assets/pic_mine_banner.png');
 
 export default class Mine extends React.Component {
+  static navigationOptions = () => ({
+    headerTitle: 'fuck'
+  });
   render() {
     const param = this.props.navigation.getParam('data');
     return (
