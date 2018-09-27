@@ -24,26 +24,27 @@ const propTypes = {
 };
 
 class HouseList extends React.Component {
-  static navigationOptions = () => ({
-    headerTitle: 'fuck'
-  });
-
   constructor(props) {
     super(props);
     this.state = {
-      search: false
+      search: false,
+      keywords: ''
     };
   }
 
-  componentDidMount() {
+  requestHouseList = params => {
     const { houseActions } = this.props;
-    houseActions.requestHouseList();
+    houseActions.requestHouseList(params);
+  };
+
+  componentDidMount() {
+    this.requestHouseList({ page: 1, page_size: 100 });
   }
 
-  onRefresh = () => {
-    const { houseActions } = this.props;
-    houseActions.requestHouseList();
-  };
+  // onRefresh = () => {
+  //   const { houseActions } = this.props;
+  //   houseActions.requestHouseList({ page: 1, page_size: 40 });
+  // };
 
   onPress = () => {
     const { navigate } = this.props.navigation;
@@ -103,7 +104,19 @@ class HouseList extends React.Component {
   renderSearch = () => {
     return (
       <View style={styles.searchWrapper}>
-        <TextInput style={styles.searchInput} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="搜索"
+          value={this.state.text}
+          onChangeText={keywords => this.setState({ keywords })}
+          onSubmitEditing={() =>
+            this.requestHouseList({
+              page: 1,
+              page_size: 100,
+              title: this.state.keywords
+            })
+          }
+        />
         <TouchableOpacity
           style={styles.searchCancel}
           onPress={() => this.setState({ search: false })}
@@ -137,31 +150,40 @@ class HouseList extends React.Component {
     );
   };
 
+  renderEmpty = () => {
+    return (
+      <View style={styles}>
+        <Text style={styles} allowFontScaling={false}>
+          暂时没有房源
+        </Text>
+      </View>
+    );
+  };
+
   render() {
     const { houses } = this.props;
 
     if (houses.loading) {
       return (
-        <View style={[styles.container, { justifyContent: 'center' }]}>
+        <View
+          style={[
+            styles.container,
+            { justifyContent: 'center', width: '100%', height: '100%' }
+          ]}
+        >
           <ActivityIndicator />
         </View>
       );
     }
+    const loading = houses.loading;
     const isEmpty =
       houses.houseList === undefined || houses.houseList.length === 0;
-    if (isEmpty) {
-      return (
-        <View>
-          <Text>empty</Text>
-        </View>
-      );
-    }
 
     return (
       <View style={styles.container}>
         {this.renderHeader()}
         {this.state.search ? this.renderSearch() : null}
-        {this.renderList(houses.houseList)}
+        {isEmpty ? this.renderEmpty() : this.renderList(houses.houseList)}
       </View>
     );
   }
@@ -198,7 +220,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   searchWrapper: {
-    ...commonStyle.customeHeaderPosition,
+    // ...commonStyle.customeHeaderPosition,
     backgroundColor: '#fff',
     flexDirection: 'row',
     paddingTop: searchPadding,

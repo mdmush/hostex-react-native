@@ -1,8 +1,9 @@
 import * as types from '../constants/ActionTypes';
 
-export function requestHouseList() {
+export function requestHouseList(params) {
   return {
-    type: types.REQUEST_HOUSE_LIST
+    type: types.REQUEST_HOUSE_LIST,
+    params
   };
 }
 

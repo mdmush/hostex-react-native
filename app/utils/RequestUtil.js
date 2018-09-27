@@ -1,13 +1,23 @@
+import queryString from 'query-string';
 import Navigator from './Navigator';
 import ToastUtil from './ToastUtil';
 
 const baseUrl = 'https://myhostex.com/';
 // const baseUrl = 'https:192.168.4.140:8080/';
 
-const request = (url, method, body) => {
+const request = (url, method, params) => {
   let isOk;
+  let stringifiedUrl = `${baseUrl}${url}`;
+  let body = params;
+  if (method === 'get') {
+    stringifiedUrl = `${stringifiedUrl}?${queryString.stringify(body)}`;
+    body = null;
+  } else {
+    body = JSON.stringify(params);
+  }
   return new Promise((resolve, reject) => {
-    fetch(`${baseUrl}${url}`, {
+    console.log('stringifiedUrl: ', stringifiedUrl);
+    fetch(stringifiedUrl, {
       method,
       credentials: 'include',
       headers: {
@@ -24,7 +34,7 @@ const request = (url, method, body) => {
         return response.json();
       })
       .then(responseData => {
-        console.log('responseData');
+        console.log('responseDate', responseData);
         if (responseData.error_code === 210001) {
           ToastUtil.showShort('登录已失效，请重新登录');
           Navigator.navigate('Login');

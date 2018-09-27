@@ -13,13 +13,6 @@ const ItemListView = ({
     data={dataSource}
     renderItem={renderItem}
     keyExtractor={keyExtractor}
-    refreshControl={
-      <RefreshControl
-        refreshing={isRefreshing}
-        onRefresh={onRefresh}
-        title="Loading..."
-      />
-    }
   />
 );
 
