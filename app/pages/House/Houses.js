@@ -28,6 +28,7 @@ class HouseList extends React.Component {
     super(props);
     this.state = {
       search: false,
+      group: true,
       keywords: ''
     };
   }
@@ -52,9 +53,52 @@ class HouseList extends React.Component {
   };
 
   renderHeader = () => {
+    const groupLeft = (
+      <TouchableOpacity onPress={() => this.setState({ group: false })}>
+        <Text style={styles} allowFontScaling={false}>
+          取消
+        </Text>
+      </TouchableOpacity>
+    );
+
+    const groupRight = (
+      <TouchableOpacity
+        style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}
+      >
+        <Text allowFontScaling={false}>加入分组</Text>
+      </TouchableOpacity>
+    );
+
+    const headerRight = (
+      <View style={styles.headerRight}>
+        <Icon.Button
+          name="md-search"
+          activeOpacity={0.8}
+          size={22}
+          backgroundColor="transparent"
+          color="#000"
+          onPress={() => this.setState({ search: true })}
+        />
+        <Icon.Button
+          name="md-swap"
+          activeOpacity={0.8}
+          size={22}
+          backgroundColor="transparent"
+          color="#000"
+        />
+        <Icon.Button
+          name="md-menu"
+          activeOpacity={0.8}
+          size={22}
+          backgroundColor="transparent"
+          color="#000"
+        />
+      </View>
+    );
+
     return (
       <View style={styles.header}>
-        <View style={styles.headerLeft} />
+        <View style={styles.headerLeft}>{this.state.group && groupLeft}</View>
         <View style={styles.headerTitle}>
           <ModalDropdown
             defaultValue="全部分组"
@@ -73,30 +117,7 @@ class HouseList extends React.Component {
             )}
           />
         </View>
-        <View style={styles.headerRight}>
-          <Icon.Button
-            name="md-search"
-            activeOpacity={0.8}
-            size={22}
-            backgroundColor="transparent"
-            color="#000"
-            onPress={() => this.setState({ search: true })}
-          />
-          <Icon.Button
-            name="md-swap"
-            activeOpacity={0.8}
-            size={22}
-            backgroundColor="transparent"
-            color="#000"
-          />
-          <Icon.Button
-            name="md-menu"
-            activeOpacity={0.8}
-            size={22}
-            backgroundColor="transparent"
-            color="#000"
-          />
-        </View>
+        {this.state.group ? groupRight : headerRight}
       </View>
     );
   };
@@ -135,7 +156,16 @@ class HouseList extends React.Component {
 
   renderItem = data => {
     const { item } = data;
-    return <ItemCell data={item} onPressHandler={this.onPress} />;
+    return (
+      <ItemCell
+        data={item}
+        onPressHandler={this.onPress}
+        onCheckStatusChange={status => {
+          item.checked = status;
+          console.log('item: ', item);
+        }}
+      />
+    );
   };
 
   renderList = dataSource => {
@@ -218,6 +248,7 @@ const styles = StyleSheet.create({
   headerRight: {
     flex: 1,
     flexDirection: 'row'
+    // justifyContent: 'flex-end'
   },
   searchWrapper: {
     // ...commonStyle.customeHeaderPosition,

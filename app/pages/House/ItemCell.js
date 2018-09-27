@@ -1,32 +1,92 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import CheckBox from 'react-native-check-box';
 import _ from 'lodash';
 
 const defaultSource = require('../../assets/default_pic.png');
 
-const ItemCell = ({ data, onPressHandler }) => (
-  <TouchableOpacity onPress={() => onPressHandler(data)}>
-    <View style={styles.container}>
-      <Image
-        style={styles.itemImg}
-        source={{ uri: _.get(data, 'house_pictrue.original_url') }}
-        defaultSource={defaultSource}
-      />
-      <View style={styles.itemRightContent}>
-        <Text style={styles.title}>
-          {_.get(data, 'house_descriptions[0].title')}
-        </Text>
-        <Text numberOfLines={1} style={styles.itemRightMiddle}>
-          {_.get(data, 'city_name')} {_.get(data, 'district_name')}
-        </Text>
-        <Text style={styles.gray}>靠近理工大学的温馨家园</Text>
+class ItemCell extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { checked: false };
+  }
+
+  render() {
+    const { data, onPressHandler } = this.props;
+    return (
+      <View style={styles.wrapper}>
+        <CheckBox
+          style={{ padding: 10 }}
+          onClick={() => {
+            this.setState({ checked: !this.state.checked }, () => {
+              this.props.onCheckStatusChange(this.state.checked);
+            });
+          }}
+          isChecked={this.state.checked}
+        />
+        <TouchableOpacity
+          style={styles.container}
+          onPress={() => onPressHandler(data)}
+        >
+          <Image
+            style={styles.itemImg}
+            source={{ uri: _.get(data, 'house_pictrue.original_url') }}
+            defaultSource={defaultSource}
+          />
+          <View style={styles.itemRightContent}>
+            <Text style={styles.title}>
+              {_.get(data, 'house_descriptions[0].title')}
+            </Text>
+            <Text numberOfLines={1} style={styles.itemRightMiddle}>
+              {_.get(data, 'city_name')} {_.get(data, 'district_name')}
+            </Text>
+            <Text style={styles.gray}>靠近理工大学的温馨家园</Text>
+          </View>
+        </TouchableOpacity>
       </View>
-    </View>
-  </TouchableOpacity>
-);
+    );
+  }
+}
+
+// const ItemCell = ({ data, checked, onPressHandler, onClickCheckbox }) => (
+//   <View style={styles.wrapper}>
+//     <CheckBox
+//       style={{ padding: 10 }}
+//       onClick={() => {
+//         onClickCheckbox();
+//       }}
+//       isChecked={checked}
+//     />
+//     <TouchableOpacity
+//       style={styles.container}
+//       onPress={() => onPressHandler(data)}
+//     >
+//       <Image
+//         style={styles.itemImg}
+//         source={{ uri: _.get(data, 'house_pictrue.original_url') }}
+//         defaultSource={defaultSource}
+//       />
+//       <View style={styles.itemRightContent}>
+//         <Text style={styles.title}>
+//           {_.get(data, 'house_descriptions[0].title')}
+//         </Text>
+//         <Text numberOfLines={1} style={styles.itemRightMiddle}>
+//           {_.get(data, 'city_name')} {_.get(data, 'district_name')}
+//         </Text>
+//         <Text style={styles.gray}>靠近理工大学的温馨家园</Text>
+//       </View>
+//     </TouchableOpacity>
+//   </View>
+// );
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff'
+  },
   container: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,

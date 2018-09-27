@@ -8,7 +8,6 @@ import _ from 'lodash';
 export default class Workbench extends React.Component {
   constructor(props) {
     super(props);
-    const d = Calendar.buildCalendar();
   }
 
   renderCards = () => {
