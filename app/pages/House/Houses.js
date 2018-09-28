@@ -6,6 +6,7 @@ import {
   View,
   Text,
   TextInput,
+  FlatList,
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
@@ -29,6 +30,7 @@ class HouseList extends React.Component {
     this.state = {
       search: false,
       group: true,
+      edit: false,
       keywords: ''
     };
   }
@@ -53,6 +55,8 @@ class HouseList extends React.Component {
   };
 
   renderHeader = () => {
+    const { navigate } = this.props.navigation;
+
     const groupLeft = (
       <TouchableOpacity onPress={() => this.setState({ group: false })}>
         <Text style={styles} allowFontScaling={false}>
@@ -63,6 +67,7 @@ class HouseList extends React.Component {
 
     const groupRight = (
       <TouchableOpacity
+        onPress={() => navigate('GroupSelect')}
         style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}
       >
         <Text allowFontScaling={false}>加入分组</Text>
@@ -155,14 +160,15 @@ class HouseList extends React.Component {
   };
 
   renderItem = data => {
-    const { item } = data;
+    let { item } = data;
     return (
       <ItemCell
         data={item}
-        onPressHandler={this.onPress}
+        group={this.state.group}
+        edit={this.state.edit}
+        onPress={this.onPress}
         onCheckStatusChange={status => {
           item.checked = status;
-          console.log('item: ', item);
         }}
       />
     );
@@ -171,13 +177,20 @@ class HouseList extends React.Component {
   renderList = dataSource => {
     const { houses } = this.props;
     return (
-      <ItemListView
-        dataSource={houses.houseList}
+      <FlatList
+        style={styles.listView}
+        extraData={this.state}
+        data={houses.houseList}
         renderItem={this.renderItem}
         keyExtractor={this.keyExtractor}
-        onRefresh={this.onRefresh}
       />
     );
+    // <ItemListView
+    //   dataSource={houses.houseList}
+    //   renderItem={this.renderItem}
+    //   keyExtractor={this.keyExtractor}
+    //   onRefresh={this.onRefresh}
+    // />
   };
 
   renderEmpty = () => {
@@ -191,6 +204,7 @@ class HouseList extends React.Component {
   };
 
   render() {
+    console.log('render all');
     const { houses } = this.props;
 
     if (houses.loading) {
@@ -275,6 +289,9 @@ const styles = StyleSheet.create({
   searchCancelBtn: {
     height: searchInputHeight,
     lineHeight: searchInputHeight
+  },
+  listView: {
+    backgroundColor: '#eeeeec'
   }
 });
 

@@ -16,6 +16,7 @@ import MessageDetail from '../pages/Message/Detail';
 import Login from '../pages/Login/Login';
 import More from '../pages/Setting/More';
 import EmptyHouses from '../pages/Workbench/EmptyHouses';
+import GroupSelect from '../pages/House/GroupSelect';
 
 import Splash from '../pages/Splash';
 
@@ -135,6 +136,7 @@ const App = createStackNavigator(
         header: null
       })
     },
+    GroupSelect: { screen: GroupSelect },
     MessageDetail: { screen: MessageDetail },
     Login: {
       screen: Login,
