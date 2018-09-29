@@ -17,7 +17,9 @@ import ItemCell from './ItemCell';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as houseCreators from '../../actions/houses';
+import * as groupCreators from '../../actions/groups';
 import commonStyle from '../../common/commonStyle';
+import _ from 'lodash';
 
 const propTypes = {
   houseActions: PropTypes.object,
@@ -28,10 +30,12 @@ class HouseList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: false,
-      group: true,
-      edit: false,
-      keywords: ''
+      searching: false,
+      grouping: true,
+      editing: false,
+      keywords: '',
+      curGroup: null,
+      selectedHouses: []
     };
   }
 
@@ -41,37 +45,47 @@ class HouseList extends React.Component {
   };
 
   componentDidMount() {
-    this.requestHouseList({ page: 1, page_size: 100 });
+    const { houseActions, groupActions } = this.props;
+    houseActions.requestHouseList({ page: 1, page_size: 100 });
+    groupActions.requestGroupList();
   }
-
-  // onRefresh = () => {
-  //   const { houseActions } = this.props;
-  //   houseActions.requestHouseList({ page: 1, page_size: 40 });
-  // };
-
   onPress = () => {
     const { navigate } = this.props.navigation;
     navigate('HouseDetail');
   };
 
+  onGroupSelect = (index, group) => {
+    const { houseActions } = this.props;
+    this.setState({ curGroup: group });
+    houseActions.requestHouseList({
+      page: 1,
+      page_size: 100,
+      group_id: group.id
+    });
+    houseActions.receiveSelectedHouses([]);
+  };
+
   renderHeader = () => {
     const { navigate } = this.props.navigation;
+    const { groups, houses } = this.props;
 
     const groupLeft = (
-      <TouchableOpacity onPress={() => this.setState({ group: false })}>
+      <TouchableOpacity onPress={() => this.setState({ grouping: false })}>
         <Text style={styles} allowFontScaling={false}>
           取消
         </Text>
       </TouchableOpacity>
     );
 
-    const groupRight = (
+    const groupRight = houses.selectedHouses.length ? (
       <TouchableOpacity
         onPress={() => navigate('GroupSelect')}
         style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}
       >
         <Text allowFontScaling={false}>加入分组</Text>
       </TouchableOpacity>
+    ) : (
+      <View style={{ flex: 1 }} />
     );
 
     const headerRight = (
@@ -91,38 +105,47 @@ class HouseList extends React.Component {
           backgroundColor="transparent"
           color="#000"
         />
-        <Icon.Button
-          name="md-menu"
-          activeOpacity={0.8}
-          size={22}
-          backgroundColor="transparent"
-          color="#000"
+        <ModalDropdown
+          renderButtonText={() => (
+            <Icon.Button
+              name="md-menu"
+              activeOpacity={0.8}
+              size={22}
+              backgroundColor="transparent"
+              color="#000"
+            />
+          )}
         />
       </View>
     );
 
     return (
       <View style={styles.header}>
-        <View style={styles.headerLeft}>{this.state.group && groupLeft}</View>
+        <View style={styles.headerLeft}>
+          {this.state.grouping && groupLeft}
+        </View>
         <View style={styles.headerTitle}>
           <ModalDropdown
-            defaultValue="全部分组"
-            options={['option 1', 'option 2']}
+            defaultValue={_.get(this.state.curGroup, 'name', '全部分组')}
+            options={[...groups.groupList, { id: 0, name: '全部分组' }]}
             textStyle={{ textAlign: 'center', fontSize: 16 }}
-            dropdownStyle={{ width: 100, height: 'auto' }}
+            dropdownStyle={{ width: 150, height: 'auto' }}
+            renderButtonText={option => option.name}
             renderRow={(option, index, isSelected) => (
               <View style={styles}>
                 <Text
+                  numberOfLines={1}
                   style={{ fontSize: 16, padding: 8, backgroundColor: '#fff' }}
                   allowFontScaling={false}
                 >
-                  {option}
+                  {option.name}
                 </Text>
               </View>
             )}
+            onSelect={this.onGroupSelect}
           />
         </View>
-        {this.state.group ? groupRight : headerRight}
+        {this.state.grouping ? groupRight : headerRight}
       </View>
     );
   };
@@ -160,15 +183,18 @@ class HouseList extends React.Component {
   };
 
   renderItem = data => {
+    const { houses, houseActions } = this.props;
     let { item } = data;
     return (
       <ItemCell
         data={item}
-        group={this.state.group}
-        edit={this.state.edit}
+        group={this.state.grouping}
+        edit={this.state.editing}
         onPress={this.onPress}
         onCheckStatusChange={status => {
           item.checked = status;
+          const selected = _.filter(houses.houseList, { checked: true });
+          houseActions.receiveSelectedHouses(selected);
         }}
       />
     );
@@ -204,7 +230,6 @@ class HouseList extends React.Component {
   };
 
   render() {
-    console.log('render all');
     const { houses } = this.props;
 
     if (houses.loading) {
@@ -226,7 +251,7 @@ class HouseList extends React.Component {
     return (
       <View style={styles.container}>
         {this.renderHeader()}
-        {this.state.search ? this.renderSearch() : null}
+        {this.state.searching ? this.renderSearch() : null}
         {isEmpty ? this.renderEmpty() : this.renderList(houses.houseList)}
       </View>
     );
@@ -298,16 +323,19 @@ const styles = StyleSheet.create({
 HouseList.protTypes = propTypes;
 
 const mapStateToProps = state => {
-  const { houses } = state;
+  const { houses, groups } = state;
   return {
-    houses
+    houses,
+    groups
   };
 };
 
 const mapDispatchToProps = dispatch => {
   const houseActions = bindActionCreators(houseCreators, dispatch);
+  const groupActions = bindActionCreators(groupCreators, dispatch);
   return {
-    houseActions
+    houseActions,
+    groupActions
   };
 };
 

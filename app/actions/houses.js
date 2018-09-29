@@ -19,3 +19,10 @@ export function receiveHouseList(houseList) {
     houseList
   };
 }
+
+export function receiveSelectedHouses(houses) {
+  return {
+    type: types.RECEIVE_SELECTED_HOUSES,
+    houses
+  };
+}

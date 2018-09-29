@@ -15,7 +15,7 @@ export default class Login extends React.Component {
   }
 
   login = () => {
-    return fetch('https://www.myhostex.com/mobile_api/user/login', {
+    return fetch('http://o.xiaogechuangxin.com/mobile_api/user/login', {
       credentials: 'include',
       method: 'POST',
       headers: {

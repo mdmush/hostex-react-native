@@ -11,11 +11,6 @@ class ItemCell extends React.Component {
     super(props);
     const { data } = props;
     this.state = { checked: false };
-    // this.state = { checked: data.checked };
-  }
-
-  componentWillReceiveProps(props) {
-    console.log('receive');
   }
 
   render() {
@@ -26,7 +21,6 @@ class ItemCell extends React.Component {
           <CheckBox
             style={{ padding: 10 }}
             onClick={() => {
-              // this.props.onCheckStatusChange(!this.state.checked);
               this.setState({ checked: !this.state.checked }, () => {
                 this.props.onCheckStatusChange(this.state.checked);
               });

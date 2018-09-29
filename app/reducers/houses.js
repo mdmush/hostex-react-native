@@ -2,7 +2,8 @@ import * as types from '../constants/ActionTypes';
 
 const initialState = {
   loading: false,
-  houseList: []
+  houseList: [],
+  selectedHouses: []
 };
 
 export default function houses(state = initialState, action) {
@@ -15,6 +16,10 @@ export default function houses(state = initialState, action) {
       return Object.assign({}, state, {
         loading: false,
         houseList: action.houseList
+      });
+    case types.RECEIVE_SELECTED_HOUSES:
+      return Object.assign({}, state, {
+        selectedHouses: action.houses
       });
     default:
       return state;
