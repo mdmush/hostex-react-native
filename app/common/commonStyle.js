@@ -133,6 +133,11 @@ const commonStyle = {
   customeHeaderPadding: {
     paddingLeft: 18,
     paddingRight: 18
+  },
+  flexCenter: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 };
 

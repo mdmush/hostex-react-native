@@ -2,7 +2,7 @@ import { put, take, call, fork } from 'redux-saga/effects';
 import RequestUtil from '../utils/RequestUtil';
 import ToastUtil from '../utils/ToastUtil';
 import * as types from '../constants/ActionTypes';
-import { fetchGroupList, receiveGroupList } from '../actions/groups';
+import { receiveGroupList } from '../actions/groups';
 
 export function* requestGroupList(params) {
   try {

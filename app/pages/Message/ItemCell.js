@@ -9,22 +9,38 @@ const ItemCell = ({ data, onPressHandler }) => (
     <View style={styles.container}>
       <View style={styles.itemImg}>
         <Image
-          source={{ uri: _.get(data, 'thirdparty_tenant_customer.photo') }}
+          source={{
+            uri: _.defaultTo(
+              _.get(data, 'thirdparty_tenant_customer.photo'),
+              ''
+            )
+          }}
           defaultSource={defaultSource}
           style={{ width: 50, height: 50 }}
         />
       </View>
       <View style={styles.itemRightContent}>
         <View style={styles.itemRightTop}>
-          <Text style={styles.gray}>
+          <Text style={styles.gray} allowFontScaling={false}>
             {_.get(data, 'thirdparty_tenant_customer.name')}
           </Text>
           <Text style={styles.gray}>{_.get(data, 'last_message_time')}</Text>
         </View>
-        <Text numberOfLines={1} style={styles.itemRightMiddle}>
+        <Text
+          numberOfLines={1}
+          style={styles.itemRightMiddle}
+          allowFontScaling={false}
+        >
           {_.get(data, 'text_preview')}
         </Text>
-        <Text style={styles.gray}>靠近理工大学的温馨家园</Text>
+        <View style={styles.itemRightBottom}>
+          <Text style={styles.gray} allowFontScaling={false}>
+            靠近理工大学的温馨家园
+          </Text>
+          <Text style={styles.houseType} allowFontScaling={false}>
+            民宿微店
+          </Text>
+        </View>
       </View>
     </View>
   </TouchableOpacity>
@@ -60,6 +76,14 @@ const styles = StyleSheet.create({
   itemRightMiddle: {
     lineHeight: 14 * 1.5,
     fontSize: 14
+  },
+  itemRightBottom: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  houseType: {
+    fontSize: 12
   },
   gray: {
     fontSize: 12,

@@ -72,7 +72,6 @@ class GroupSelect extends React.Component {
 
   onCreatePress = () => {
     const { groupActions } = this.props;
-    console.log('groupActions: ', groupActions);
     groupActions.requestCreateGroup(this.state.name);
     this.refs.modal.close();
   };
@@ -224,7 +223,7 @@ const modal = StyleSheet.create({
   }
 });
 
-GroupSelect.protoTypes = propTypes;
+GroupSelect.propTypes = propTypes;
 
 const mapStateToProps = state => {
   const { groups, houses } = state;

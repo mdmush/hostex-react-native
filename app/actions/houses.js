@@ -26,3 +26,11 @@ export function receiveSelectedHouses(houses) {
     houses
   };
 }
+
+export function requestTitleAlias(houseId, titleAlias) {
+  return {
+    type: types.REQUEST_TITLE_ALIAS,
+    houseId,
+    titleAlias
+  };
+}

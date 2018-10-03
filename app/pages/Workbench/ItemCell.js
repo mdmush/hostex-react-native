@@ -20,25 +20,25 @@ const ItemCell = () => (
         <View style={styles.middleRightBottom}>
           <Text>8月16日-8月17日 | 1晚 | 2人</Text>
           <View style={styles.platform}>
-            <Text style={styles}>民宿微店</Text>
+            <Text>民宿微店</Text>
           </View>
         </View>
       </View>
     </View>
     <View style={styles.footer}>
       <View style={styles.price}>
-        <Text style={styles}>总房费</Text>
-        <Text style={styles}>CNY 2560</Text>
+        <Text>总房费</Text>
+        <Text>CNY 2560</Text>
       </View>
       <View style={styles.btns}>
         <TouchableOpacity>
-          <Text style={styles}>联系房客</Text>
+          <Text>联系房客</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={styles}>拒绝</Text>
+          <Text>拒绝</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text style={styles}>接受</Text>
+          <Text>接受</Text>
         </TouchableOpacity>
       </View>
     </View>

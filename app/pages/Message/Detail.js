@@ -11,9 +11,7 @@ import {
 import DetailItem from './DetailItem';
 
 export default class MessageDetail extends React.Component {
-  static navigationOptions = {
-    title: '详情'
-  };
+  static navigationOptions = { title: '详情' };
 
   constructor(props) {
     super(props);
@@ -43,15 +41,14 @@ export default class MessageDetail extends React.Component {
   }
 
   keyboardWillShow = e => {
-    console.log('show');
-    this.setState({ inputLocation: e.endCoordinates.height });
+    this.setState({
+      inputLocation: e.endCoordinates.height
+    });
   };
 
   keyboardWillHide = e => {
     this.setState({ inputLocation: 0 });
   };
-
-  keyExtractor = (index, item) => item.id;
 
   renderItem = data => {
     const { item } = data;
@@ -63,18 +60,22 @@ export default class MessageDetail extends React.Component {
       style={styles.list}
       data={dataSource}
       renderItem={this.renderItem}
-      keyExtractor={this.keyExtractor}
+      keyExtractor={(index, item) => item.id}
     />
+  );
+
+  renderFooter = () => (
+    <View style={[styles.footer, { bottom: this.state.inputLocation }]}>
+      <TextInput placeholder="点击我输入文本" style={{ flex: 1 }} />
+      <Button title="发送" style={{ width: 100, height: 50 }} />
+    </View>
   );
 
   render() {
     return (
       <View style={styles.container}>
         {this.renderList(this.state.dataSource)}
-        <View style={[styles.footer, { bottom: this.state.inputLocation }]}>
-          <TextInput placeholder="点击我输入文本" style={{ flex: 1 }} />
-          <Button title="发送" style={{ width: 100, height: 50 }} />
-        </View>
+        {this.renderFooter()}
       </View>
     );
   }

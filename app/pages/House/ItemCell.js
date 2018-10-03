@@ -29,14 +29,12 @@ class ItemCell extends React.Component {
           />
         )}
         {edit && (
-          <Icon.Button
-            name="md-search"
-            activeOpacity={0.8}
-            size={22}
-            backgroundColor="transparent"
-            color="#000"
-            onPress={() => this.setState({ search: true })}
-          />
+          <TouchableOpacity
+            style={{ padding: 10 }}
+            onPress={() => this.props.onEditPress(data)}
+          >
+            <Icon style={{ textAlign: 'center' }} name="md-create" size={22} />
+          </TouchableOpacity>
         )}
 
         <TouchableOpacity

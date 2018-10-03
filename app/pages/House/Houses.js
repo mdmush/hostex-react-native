@@ -11,7 +11,14 @@ import {
   ActivityIndicator
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Modal from 'react-native-modalbox';
 import ModalDropdown from 'react-native-modal-dropdown';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger
+} from 'react-native-popup-menu';
 import ItemListView from './ItemListView';
 import ItemCell from './ItemCell';
 import { connect } from 'react-redux';
@@ -31,17 +38,25 @@ class HouseList extends React.Component {
     super(props);
     this.state = {
       searching: false,
-      grouping: true,
+      grouping: false,
       editing: false,
       keywords: '',
       curGroup: null,
-      selectedHouses: []
+      titleAlias: '',
+      curHouseId: 0,
+      curTitleAlias: ''
     };
   }
 
   requestHouseList = params => {
     const { houseActions } = this.props;
     houseActions.requestHouseList(params);
+  };
+
+  requestTitleAlias = () => {
+    const { houseActions } = this.props;
+    const { curHouseId: houseId, curTitleAlias: titleAlias } = this.state;
+    houseActions.requestTitleAlias(houseId, titleAlias);
   };
 
   componentDidMount() {
@@ -65,15 +80,50 @@ class HouseList extends React.Component {
     houseActions.receiveSelectedHouses([]);
   };
 
+  renderModal = () => {
+    return (
+      <Modal ref={'modal'} style={modal.container}>
+        <View style={modal.content}>
+          <Text
+            style={{ fontSize: 16, height: 25, lineHeight: 25 }}
+            allowFontScaling={false}
+          >
+            设置别名
+          </Text>
+          <TextInput
+            style={modal.input}
+            value={this.state.curTitleAlias}
+            onChangeText={curTitleAlias => this.setState({ curTitleAlias })}
+          />
+          <View style={modal.footer}>
+            <TouchableOpacity
+              style={[modal.btnCancel, modal.btn]}
+              onPress={() => this.refs.modal.close()}
+            >
+              <Text>取消</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[modal.btnCancel, modal.btn]}
+              onPress={() => {
+                this.refs.modal.close();
+                this.requestTitleAlias();
+              }}
+            >
+              <Text>确定</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
   renderHeader = () => {
     const { navigate } = this.props.navigation;
     const { groups, houses } = this.props;
 
     const groupLeft = (
       <TouchableOpacity onPress={() => this.setState({ grouping: false })}>
-        <Text style={styles} allowFontScaling={false}>
-          取消
-        </Text>
+        <Text allowFontScaling={false}>取消</Text>
       </TouchableOpacity>
     );
 
@@ -96,7 +146,7 @@ class HouseList extends React.Component {
           size={22}
           backgroundColor="transparent"
           color="#000"
-          onPress={() => this.setState({ search: true })}
+          onPress={() => this.setState({ searching: true })}
         />
         <Icon.Button
           name="md-swap"
@@ -105,17 +155,33 @@ class HouseList extends React.Component {
           backgroundColor="transparent"
           color="#000"
         />
-        <ModalDropdown
-          renderButtonText={() => (
-            <Icon.Button
+        <Menu>
+          <MenuTrigger>
+            <Icon
               name="md-menu"
-              activeOpacity={0.8}
               size={22}
-              backgroundColor="transparent"
               color="#000"
+              style={{ padding: 5 }}
             />
-          )}
-        />
+          </MenuTrigger>
+          <MenuOptions>
+            <MenuOption>
+              <Text style={{ padding: 5 }}>批量分组</Text>
+            </MenuOption>
+            <MenuOption
+              onSelect={() => {
+                this.setState({ grouping: !this.state.grouping });
+              }}
+            >
+              <Text style={{ padding: 5 }}>分组管理</Text>
+            </MenuOption>
+            <MenuOption
+              onSelect={() => this.setState({ editing: !this.state.editing })}
+            >
+              <Text style={{ padding: 5 }}>设置房源别名</Text>
+            </MenuOption>
+          </MenuOptions>
+        </Menu>
       </View>
     );
 
@@ -168,7 +234,7 @@ class HouseList extends React.Component {
         />
         <TouchableOpacity
           style={styles.searchCancel}
-          onPress={() => this.setState({ search: false })}
+          onPress={() => this.setState({ searching: false })}
         >
           <Text
             style={styles.searchCancelBtn}
@@ -191,6 +257,13 @@ class HouseList extends React.Component {
         group={this.state.grouping}
         edit={this.state.editing}
         onPress={this.onPress}
+        onEditPress={data => {
+          this.setState({
+            curHouseId: _.get(item, 'id'),
+            curTitleAlias: _.get(item, 'title_alias', '')
+          });
+          this.refs.modal.open();
+        }}
         onCheckStatusChange={status => {
           item.checked = status;
           const selected = _.filter(houses.houseList, { checked: true });
@@ -203,28 +276,77 @@ class HouseList extends React.Component {
   renderList = dataSource => {
     const { houses } = this.props;
     return (
-      <FlatList
-        style={styles.listView}
-        extraData={this.state}
-        data={houses.houseList}
-        renderItem={this.renderItem}
-        keyExtractor={this.keyExtractor}
-      />
+      <View style={{ flex: 1 }}>
+        <View style={{ padding: 20, alignItems: 'center' }}>
+          <Text style={{ margin: 20 }} allowFontScaling={false}>
+            您还有129套房源在临时列表中，接下来您需要将其创建为聚合房源。
+          </Text>
+          <TouchableOpacity style={{ backgroundColor: '#000', padding: 10 }}>
+            <Text style={{ color: '#fff' }} allowFontScaling={false}>
+              创建聚合房源
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          style={styles.listView}
+          extraData={this.state}
+          data={houses.houseList}
+          renderItem={this.renderItem}
+          keyExtractor={this.keyExtractor}
+        />
+      </View>
     );
-    // <ItemListView
-    //   dataSource={houses.houseList}
-    //   renderItem={this.renderItem}
-    //   keyExtractor={this.keyExtractor}
-    //   onRefresh={this.onRefresh}
-    // />
   };
 
-  renderEmpty = () => {
+  /** 未同步 */
+  renderEmptyUnSync = () => {
     return (
-      <View style={styles}>
-        <Text style={styles} allowFontScaling={false}>
-          暂时没有房源
-        </Text>
+      <View style={commonStyle.flexCenter}>
+        <View style={{ marginTop: 10, marginBottom: 10 }}>
+          <Text style={{ fontSize: 16 }} allowFontScaling={false}>
+            您还没有同步房源
+          </Text>
+        </View>
+        <View style={{ width: '60%', marginTop: 10, marginBottom: 10 }}>
+          <Text style={{ fontSize: 14 }} allowFontScaling={false}>
+            进入“我的-渠道账号管理”，将您的Airbnb、榛果、途家等账号绑定到百居易，并同步房源。
+          </Text>
+        </View>
+        <TouchableOpacity style={{ backgroundColor: '#000', padding: 10 }}>
+          <Text style={{ color: '#fff' }} allowFontScaling={false}>
+            进入渠道账号管理
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  /** 已同步 */
+  renderEmptyDoSync = () => {
+    return (
+      <View style={commonStyle.flexCenter}>
+        <View style={{ width: '60%', marginTop: 10, marginBottom: 10 }}>
+          <Text style={{ fontSize: 14 }} allowFontScaling={false}>
+            您有129套房源在临时列表中，请将不同渠道的相同房间创建为一个“聚合房源”，以便百居易为您管理房态。
+          </Text>
+        </View>
+        <TouchableOpacity style={{ backgroundColor: '#000', padding: 10 }}>
+          <Text style={{ color: '#fff' }} allowFontScaling={false}>
+            创建聚合房源
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  /** 非空，包括已关联的和未关联的 */
+  renderUnEmpty = () => {
+    const { houses } = this.props;
+    return (
+      <View style={{ flex: 1 }}>
+        {this.state.searching ? this.renderSearch() : null}
+        {this.renderList(houses.houseList)}
+        {this.renderModal()}
       </View>
     );
   };
@@ -232,27 +354,28 @@ class HouseList extends React.Component {
   render() {
     const { houses } = this.props;
 
-    if (houses.loading) {
+    const loading = houses.loading;
+
+    if (loading) {
       return (
-        <View
-          style={[
-            styles.container,
-            { justifyContent: 'center', width: '100%', height: '100%' }
-          ]}
-        >
+        <View style={commonStyle.flexCenter}>
           <ActivityIndicator />
         </View>
       );
     }
-    const loading = houses.loading;
-    const isEmpty =
-      houses.houseList === undefined || houses.houseList.length === 0;
+
+    // const isEmpty =
+    //   !loading &&
+    //   (houses.houseList === undefined || houses.houseList.length === 0);
+
+    const test = 2;
+
+    const body = test === 2 ? this.renderUnEmpty() : this.renderEmptyDoSync();
 
     return (
       <View style={styles.container}>
         {this.renderHeader()}
-        {this.state.searching ? this.renderSearch() : null}
-        {isEmpty ? this.renderEmpty() : this.renderList(houses.houseList)}
+        {body}
       </View>
     );
   }
@@ -286,7 +409,8 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
     // justifyContent: 'flex-end'
   },
   searchWrapper: {
@@ -316,11 +440,51 @@ const styles = StyleSheet.create({
     lineHeight: searchInputHeight
   },
   listView: {
+    flex: 1,
     backgroundColor: '#eeeeec'
   }
 });
 
-HouseList.protTypes = propTypes;
+const modal = StyleSheet.create({
+  container: {
+    width: 300,
+    height: 180,
+    borderRadius: 6
+  },
+  content: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    padding: 20
+  },
+  input: {
+    marginTop: 15,
+    marginBottom: 15,
+    width: 200,
+    height: 35,
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 4
+  },
+  footer: {
+    flexDirection: 'row'
+  },
+  btn: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  btnCancel: {
+    borderWidth: 1,
+    borderColor: '#f2f2f2',
+    marginRight: 10
+  }
+});
+
+HouseList.propTypes = propTypes;
 
 const mapStateToProps = state => {
   const { houses, groups } = state;

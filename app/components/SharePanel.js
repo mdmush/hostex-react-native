@@ -4,10 +4,11 @@ import {
   Text,
   TouchableOpacity,
   TouchableHighlight,
-  Modal,
+  // Modal,
   Image,
   StyleSheet
 } from 'react-native';
+import Modal from 'react-native-modalbox';
 import WeChatUtil from '../utils/Share';
 
 const session = require('../assets/share_icon_wechat.png');
@@ -20,47 +21,81 @@ class SharePanel extends React.Component {
 
   render() {
     return (
-      <View style={{ marginTop: 22, backgroundColor: 'green' }}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.props.visible}
-          onRequestClose={() => this.props.visibleChange(false)}
-        >
-          <View style={styles.footer}>
-            <View style={styles.top}>
-              <Text style={styles.topText}>分享到</Text>
-            </View>
-            <View style={styles.body}>
-              <TouchableOpacity
-                style={styles.item}
-                onPress={() => {
-                  WeChatUtil.shareToSession(this.props.shareConfigs.session);
-                  this.props.visibleChange(false);
-                }}
-              >
-                <Image source={session} style={styles.itemImage} />
-                <Text style={styles.itemText}>微信好友</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.item}
-                onPress={() => {
-                  WeChatUtil.shareToTimeline(this.props.shareConfigs.timeline);
-                  this.props.visibleChange(false);
-                }}
-              >
-                <Image source={timeline} style={styles.itemImage} />
-                <Text style={styles.itemText}>朋友圈</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.bottom}>
-              <TouchableOpacity onPress={() => this.props.visibleChange(false)}>
-                <Text style={styles.bottomText}>取消</Text>
-              </TouchableOpacity>
-            </View>
+      <Modal isOpen={true}>
+        <View style={styles.footer}>
+          <View style={styles.top}>
+            <Text style={styles.topText}>分享到</Text>
           </View>
-        </Modal>
-      </View>
+          <View style={styles.body}>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => {
+                WeChatUtil.shareToSession(this.props.shareConfigs.session);
+                this.props.visibleChange(false);
+              }}
+            >
+              <Image source={session} style={styles.itemImage} />
+              <Text style={styles.itemText}>微信好友</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => {
+                WeChatUtil.shareToTimeline(this.props.shareConfigs.timeline);
+                this.props.visibleChange(false);
+              }}
+            >
+              <Image source={timeline} style={styles.itemImage} />
+              <Text style={styles.itemText}>朋友圈</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.bottom}>
+            <TouchableOpacity onPress={() => this.props.visibleChange(false)}>
+              <Text style={styles.bottomText}>取消</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      // <View style={{ marginTop: 22, backgroundColor: 'green' }}>
+      //   <Modal
+      //     animationType="slide"
+      //     transparent={true}
+      //     visible={this.props.visible}
+      //     onRequestClose={() => this.props.visibleChange(false)}
+      //   >
+      //     <View style={styles.footer}>
+      //       <View style={styles.top}>
+      //         <Text style={styles.topText}>分享到</Text>
+      //       </View>
+      //       <View style={styles.body}>
+      //         <TouchableOpacity
+      //           style={styles.item}
+      //           onPress={() => {
+      //             WeChatUtil.shareToSession(this.props.shareConfigs.session);
+      //             this.props.visibleChange(false);
+      //           }}
+      //         >
+      //           <Image source={session} style={styles.itemImage} />
+      //           <Text style={styles.itemText}>微信好友</Text>
+      //         </TouchableOpacity>
+      //         <TouchableOpacity
+      //           style={styles.item}
+      //           onPress={() => {
+      //             WeChatUtil.shareToTimeline(this.props.shareConfigs.timeline);
+      //             this.props.visibleChange(false);
+      //           }}
+      //         >
+      //           <Image source={timeline} style={styles.itemImage} />
+      //           <Text style={styles.itemText}>朋友圈</Text>
+      //         </TouchableOpacity>
+      //       </View>
+      //       <View style={styles.bottom}>
+      //         <TouchableOpacity onPress={() => this.props.visibleChange(false)}>
+      //           <Text style={styles.bottomText}>取消</Text>
+      //         </TouchableOpacity>
+      //       </View>
+      //     </View>
+      //   </Modal>
+      // </View>
     );
   }
 }
