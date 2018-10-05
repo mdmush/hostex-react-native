@@ -15,7 +15,6 @@ import { bindActionCreators } from 'redux';
 import ItemCell from './ItemCell';
 import commonStyle from '../../common/commonStyle';
 import * as messageCreators from '../../actions/messages';
-import SharedPanel from '../../components/SharePanel';
 
 const propTypes = {
   messageActions: PropTypes.object,
@@ -99,7 +98,6 @@ class Messages extends React.Component {
         {this.renderHeader()}
         {this.renderTab()}
         {this.renderList()}
-        <SharedPanel />
       </View>
     );
   }

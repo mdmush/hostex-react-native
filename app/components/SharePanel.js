@@ -21,7 +21,12 @@ class SharePanel extends React.Component {
 
   render() {
     return (
-      <Modal isOpen={true}>
+      <Modal
+        isOpen={true}
+        coverScreen={true}
+        position="bottom"
+        style={styles.container}
+      >
         <View style={styles.footer}>
           <View style={styles.top}>
             <Text style={styles.topText}>分享到</Text>
@@ -102,14 +107,10 @@ class SharePanel extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    height: 200
   },
   footer: {
-    height: 200,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: 1,
     backgroundColor: '#fff',
     borderTopColor: '#a7a7a7',
     borderTopWidth: 1

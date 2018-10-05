@@ -2,13 +2,19 @@ import React from 'react';
 import {
   View,
   Text,
+  Image,
+  TouchableOpacity,
   StyleSheet,
+  ScrollView,
   FlatList,
   TextInput,
   Button,
   Keyboard
 } from 'react-native';
+import Modal from 'react-native-modalbox';
 import DetailItem from './DetailItem';
+
+const defaultSource = require('../../assets/default_user.png');
 
 export default class MessageDetail extends React.Component {
   static navigationOptions = { title: '详情' };
@@ -50,6 +56,60 @@ export default class MessageDetail extends React.Component {
     this.setState({ inputLocation: 0 });
   };
 
+  renderModalItem = () => {
+    return (
+      <View style={modal.item}>
+        <View style={modal.content}>
+          <View style={modal.leftPart}>
+            <Image source={defaultSource} style={{ width: 60, height: 60 }} />
+          </View>
+          <View style={modal.rightPart}>
+            <Text style={modal.title} allowFontScaling={false}>
+              市中心三里屯、朝阳公园旁的新中式风格房间
+            </Text>
+            <View style={modal.info}>
+              <View style={modal.status}>
+                <Text allowFontScaling={false}>待确认</Text>
+                <Text allowFontScaling={false}>|8月16-8月17|2人|1晚</Text>
+              </View>
+              <Text style={modal.platform} allowFontScaling={false}>
+                小猪短租
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={modal.footer}>
+          <Text style={modal.footerText} allowFontScaling={false}>
+            预计收入
+          </Text>
+          <View style={modal.btns}>
+            <TouchableOpacity style={modal.btn}>
+              <Text allowFontScaling={false}>拒绝</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={modal.btn}>
+              <Text allowFontScaling={false}>接受</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  renderModal = () => {
+    return (
+      <Modal
+        isOpen={true}
+        position="top"
+        backdrop={false}
+        swipeToClose={false}
+        animationDuration={0}
+        style={{ height: 120 }}
+      >
+        <ScrollView>{this.renderModalItem()}</ScrollView>
+      </Modal>
+    );
+  };
+
   renderItem = data => {
     const { item } = data;
     return <DetailItem data={item} />;
@@ -74,6 +134,7 @@ export default class MessageDetail extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        {this.renderModal()}
         {this.renderList(this.state.dataSource)}
         {this.renderFooter()}
       </View>
@@ -101,5 +162,53 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     borderTopColor: '#d9d9d9',
     borderWidth: 1
+  }
+});
+
+const modal = StyleSheet.create({
+  item: {
+    height: 120,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderBottomWidth: 1,
+    borderColor: '#f2f2f2'
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  rightPart: {
+    flex: 1,
+    marginLeft: 15
+  },
+  info: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 5
+  },
+  status: {
+    flexDirection: 'row'
+  },
+  footer: {
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  btns: {
+    flexDirection: 'row'
+  },
+  btn: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: '#24cf5f',
+    marginLeft: 15,
+    borderRadius: 4
   }
 });

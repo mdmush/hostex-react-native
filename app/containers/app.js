@@ -148,7 +148,7 @@ const App = createStackNavigator(
     EmptyHouses: { screen: EmptyHouses }
   },
   {
-    initialRouteName: 'Splash',
+    initialRouteName: 'MessageDetail',
     headerMode: 'screen',
     navigationOptions: {
       headerStyle: {
