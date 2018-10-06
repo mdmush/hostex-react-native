@@ -105,7 +105,9 @@ export default class MessageDetail extends React.Component {
         animationDuration={0}
         style={{ height: 120 }}
       >
-        <ScrollView>{this.renderModalItem()}</ScrollView>
+        <ScrollView style={modal.container}>
+          {this.renderModalItem()}
+        </ScrollView>
       </Modal>
     );
   };
