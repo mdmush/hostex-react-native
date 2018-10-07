@@ -123,11 +123,21 @@ export default class MessageDetail extends React.Component {
         backdrop={false}
         swipeToClose={false}
         animationDuration={0}
-        style={{ height: 120 }}
+        keyboardTopOffset={0}
+        style={{ height: 140 }}
       >
         <ScrollView style={modal.container}>
           {this.renderModalItem()}
         </ScrollView>
+        <TouchableOpacity
+          onPress={() => this.setState({ modalOpen: false })}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}
+        >
+          <Icon name="md-arrow-dropup-circle" size={20} color="#000" />
+        </TouchableOpacity>
       </Modal>
     );
   };
