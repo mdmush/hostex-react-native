@@ -12,7 +12,9 @@ import {
   Keyboard
 } from 'react-native';
 import Modal from 'react-native-modalbox';
+import Icon from 'react-native-vector-icons/Ionicons';
 import DetailItem from './DetailItem';
+import commonStyle from '../../common/commonStyle';
 
 const defaultSource = require('../../assets/default_user.png');
 
@@ -21,7 +23,7 @@ export default class MessageDetail extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { dataSource: [], inputLocation: 0 };
+    this.state = { dataSource: [], inputLocation: 0, modalOpen: false };
   }
 
   componentWillMount() {
@@ -54,6 +56,24 @@ export default class MessageDetail extends React.Component {
 
   keyboardWillHide = e => {
     this.setState({ inputLocation: 0 });
+  };
+
+  renderCollapseIcon = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => this.setState({ modalOpen: true })}
+        style={{
+          position: 'absolute',
+          zIndex: 1000,
+          width: '100%',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          top: commonStyle.navHeight
+        }}
+      >
+        <Icon name="md-arrow-dropdown-circle" size={20} color="#000" />
+      </TouchableOpacity>
+    );
   };
 
   renderModalItem = () => {
@@ -98,7 +118,7 @@ export default class MessageDetail extends React.Component {
   renderModal = () => {
     return (
       <Modal
-        isOpen={true}
+        isOpen={this.state.modalOpen}
         position="top"
         backdrop={false}
         swipeToClose={false}
@@ -136,6 +156,7 @@ export default class MessageDetail extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        {!this.state.modalOpen && this.renderCollapseIcon()}
         {this.renderModal()}
         {this.renderList(this.state.dataSource)}
         {this.renderFooter()}

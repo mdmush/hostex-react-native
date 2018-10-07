@@ -70,7 +70,7 @@ const commonStyle = {
 
   /** height **/
   // 导航栏的高度
-  navHeight: Platform.OS === 'ios' ? 64 : 56,
+  dnavHeight: Platform.OS === 'ios' ? 64 : 56,
   // 导航栏顶部的状态栏高度
   navStatusBarHeight: Platform.OS === 'ios' ? 20 : 0,
   // 导航栏除掉状态栏的高度
