@@ -29,7 +29,7 @@ class Messages extends React.Component {
 
   componentDidMount() {
     const { messageActions } = this.props;
-    messageActions.requestMessageList({
+    messageActions.requestThreadList({
       page: 1
     });
   }
@@ -72,15 +72,15 @@ class Messages extends React.Component {
     const { messages } = this.props;
     return (
       <FlatList
-        data={messages.messageList}
+        data={messages.threadList}
         renderItem={this.renderItem}
         keyExtractor={(index, item) => item.id}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isRefreshing}
-            title="Loading..."
-          />
-        }
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={this.state.isRefreshing}
+        //     title="Loading..."
+        //   />
+        // }
       />
     );
     // <ItemListView
@@ -102,9 +102,9 @@ class Messages extends React.Component {
     );
   }
 
-  onPress = () => {
+  onPress = (threadId, customerInfo) => {
     const { navigate } = this.props.navigation;
-    navigate('MessageDetail');
+    navigate('MessageDetail', { threadId, customerInfo });
   };
 }
 

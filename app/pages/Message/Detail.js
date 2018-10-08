@@ -11,47 +11,52 @@ import {
   Button,
   Keyboard
 } from 'react-native';
+import PropTypes from 'prop-types';
 import Modal from 'react-native-modalbox';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import _ from 'lodash';
+import * as messageCreators from '../../actions/messages';
 import DetailItem from './DetailItem';
 import commonStyle from '../../common/commonStyle';
 
 const defaultSource = require('../../assets/default_user.png');
 
-export default class MessageDetail extends React.Component {
-  static navigationOptions = { title: '详情' };
+const propTypes = {
+  messageActions: PropTypes.object,
+  messages: PropTypes.object.isRequired
+};
+
+class MessageDetail extends React.Component {
+  static navigationOptions = ({ navigation }) => {
+    const customerInfo = navigation.getParam('customerInfo');
+    console.log('customerInfo: ', customerInfo);
+    return {
+      title: customerInfo.name
+    };
+  };
 
   constructor(props) {
     super(props);
-    this.state = { dataSource: [], inputLocation: 0, modalOpen: false };
+    this.state = { inputLocation: 0, modalOpen: false };
   }
 
   componentWillMount() {
+    const { messageActions, navigation } = this.props;
+    const threadId = navigation.getParam('threadId');
+    messageActions.requestMessageList(threadId);
+  }
+
+  componentDidMount() {
+    // const { messages, navigation } = this.props;
+
     Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
     Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this));
   }
 
-  componentDidMount() {
-    return fetch(
-      'https://www.myhostex.com/mobile_api/chat/chat_detail?thread_id=1-p2p-9043646-8795560',
-      {
-        credentials: 'include'
-      }
-    )
-      .then(res => res.json())
-      .then(resJSON => {
-        console.log('detail', resJSON);
-        this.setState({
-          dataSource: resJSON.data.list
-        });
-      })
-      .catch(err => console.log('detail', err));
-  }
-
   keyboardWillShow = e => {
-    this.setState({
-      inputLocation: e.endCoordinates.height
-    });
+    this.setState({ inputLocation: e.endCoordinates.height });
   };
 
   keyboardWillHide = e => {
@@ -60,19 +65,18 @@ export default class MessageDetail extends React.Component {
 
   renderCollapseIcon = () => {
     return (
-      <TouchableOpacity
-        onPress={() => this.setState({ modalOpen: true })}
-        style={{
-          position: 'absolute',
-          zIndex: 1000,
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          top: commonStyle.navHeight
-        }}
-      >
-        <Icon name="md-arrow-dropdown-circle" size={20} color="#000" />
-      </TouchableOpacity>
+      <View style={collapse.container}>
+        <TouchableOpacity
+          style={collapse.wrapper}
+          onPress={() =>
+            this.setState({
+              modalOpen: true
+            })
+          }
+        >
+          <Icon name="md-arrow-dropdown-circle" size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -147,14 +151,17 @@ export default class MessageDetail extends React.Component {
     return <DetailItem data={item} />;
   };
 
-  renderList = dataSource => (
-    <FlatList
-      style={styles.list}
-      data={dataSource}
-      renderItem={this.renderItem}
-      keyExtractor={(index, item) => item.id}
-    />
-  );
+  renderList = dataSource => {
+    const { messages } = this.props;
+    return (
+      <FlatList
+        style={styles.list}
+        data={messages.messageList}
+        renderItem={this.renderItem}
+        keyExtractor={(index, item) => item.id}
+      />
+    );
+  };
 
   renderFooter = () => (
     <View style={[styles.footer, { bottom: this.state.inputLocation }]}>
@@ -195,6 +202,25 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     borderTopColor: '#d9d9d9',
     borderWidth: 1
+  }
+});
+
+const collapse = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    zIndex: 1000,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    top: 0
+  },
+  wrapper: {
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    backgroundColor: 'rgba(167,167,167, .3)'
   }
 });
 
@@ -245,3 +271,22 @@ const modal = StyleSheet.create({
     borderRadius: 4
   }
 });
+
+const mapStateToProps = state => {
+  const { messages } = state;
+  return {
+    messages
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  const messageActions = bindActionCreators(messageCreators, dispatch);
+  return {
+    messageActions
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MessageDetail);

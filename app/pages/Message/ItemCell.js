@@ -5,7 +5,9 @@ import _ from 'lodash';
 const defaultSource = require('../../assets/default_user.png');
 
 const ItemCell = ({ data, onPressHandler }) => (
-  <TouchableOpacity onPress={() => onPressHandler(data)}>
+  <TouchableOpacity
+    onPress={() => onPressHandler(data.id, data.thirdparty_tenant_customer)}
+  >
     <View style={styles.container}>
       <View style={styles.itemImg}>
         <Image
@@ -35,7 +37,7 @@ const ItemCell = ({ data, onPressHandler }) => (
         </Text>
         <View style={styles.itemRightBottom}>
           <Text style={styles.gray} allowFontScaling={false}>
-            靠近理工大学的温馨家园
+            {data.house_title}
           </Text>
           <Text style={styles.houseType} allowFontScaling={false}>
             民宿微店
