@@ -89,9 +89,7 @@ class GroupSelect extends React.Component {
           isChecked={item.checked}
           onClick={() => this.toggleSelectStatus(item)}
         />
-        <Text style={styles} allowFontScaling={false}>
-          {item.name}
-        </Text>
+        <Text allowFontScaling={false}>{item.name}</Text>
       </TouchableOpacity>
     ));
   };

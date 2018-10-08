@@ -13,6 +13,7 @@ import Workbench from '../pages/Workbench/Workbench';
 
 import HouseDetail from '../pages/House/Detail';
 import MessageDetail from '../pages/Message/Detail';
+import ReplyList from '../pages/Message/ReplyList';
 import Login from '../pages/Login/Login';
 import More from '../pages/Setting/More';
 import EmptyHouses from '../pages/Workbench/EmptyHouses';
@@ -69,7 +70,7 @@ const TabContainer = createBottomTabNavigator(
     }
   },
   {
-    initialRouteName: 'Workbench',
+    initialRouteName: 'MessageList',
     tabBarOptions: {
       //当前选中的tab bar的文本颜色和图标颜色
       activeTintColor: '#4BC1D2',
@@ -138,6 +139,7 @@ const App = createStackNavigator(
     },
     GroupSelect: { screen: GroupSelect },
     MessageDetail: { screen: MessageDetail },
+    ReplyList: { screen: ReplyList },
     Login: {
       screen: Login,
       navigationOptions: () => ({
@@ -148,7 +150,7 @@ const App = createStackNavigator(
     EmptyHouses: { screen: EmptyHouses }
   },
   {
-    initialRouteName: 'Splash',
+    initialRouteName: 'ReplyList',
     headerMode: 'screen',
     navigationOptions: {
       headerStyle: {

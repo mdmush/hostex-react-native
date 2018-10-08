@@ -2,8 +2,8 @@ import queryString from 'query-string';
 import Navigator from './Navigator';
 import ToastUtil from './ToastUtil';
 
-// const baseUrl = 'http://o.xiaogechuangxin.com/';
-const baseUrl = 'https://www.myhostex.com/';
+const baseUrl = 'http://i.test177.xiaogechuangxin.com/';
+// const baseUrl = 'https://www.myhostex.com/';
 
 const request = (url, method, params) => {
   let isOk;
@@ -17,6 +17,7 @@ const request = (url, method, params) => {
   }
   return new Promise((resolve, reject) => {
     console.log('stringifiedUrl: ', stringifiedUrl);
+    console.log('body: ', body);
     fetch(stringifiedUrl, {
       method,
       credentials: 'include',
@@ -26,6 +27,7 @@ const request = (url, method, params) => {
       body
     })
       .then(response => {
+        console.log('response: ', response);
         if (response.ok) {
           isOk = true;
         } else {
@@ -46,6 +48,7 @@ const request = (url, method, params) => {
         }
       })
       .catch(error => {
+        console.log('error: ', error);
         reject(error);
       });
   });

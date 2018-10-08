@@ -3,7 +3,7 @@ import * as types from '../constants/ActionTypes';
 const initialState = {
   threadList: [],
   messageList: [],
-  customerInfo: null
+  replyList: []
 };
 
 export default function messages(state = initialState, action) {
@@ -18,9 +18,9 @@ export default function messages(state = initialState, action) {
       return Object.assign({}, state, {
         messageList: action.messageList
       });
-    case types.RECEIVE_CUSTOMER_INFO:
+    case types.RECEIVE_QUICK_REPLY_LIST:
       return Object.assign({}, state, {
-        customerInfo: action.customerInfo
+        replyList: action.replyList
       });
     default:
       return state;

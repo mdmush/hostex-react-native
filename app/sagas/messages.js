@@ -5,7 +5,7 @@ import {
   receiveThreadList,
   fetchMessageList,
   receiveMessageList,
-  receiveCustomerInfo
+  receiveQuickReplyList
 } from '../actions/messages';
 
 export function* requestThreadList(params) {
@@ -39,7 +39,6 @@ export function* requestMessageList(params) {
       params
     );
     yield put(receiveMessageList(result.data.list));
-    yield put(receiveCustomerInfo(result.data.customer));
   } catch (error) {
     yield put(receiveMessageList([]));
   }
@@ -49,5 +48,25 @@ export function* watchRequestMessageDetail() {
   while (true) {
     const { threadId: thread_id } = yield take(types.REQUEST_MESSAGE_LIST);
     yield fork(requestMessageList, { thread_id });
+  }
+}
+
+export function* requestQuickReplyList() {
+  try {
+    const result = yield call(
+      RequestUtil.request,
+      'mobile_api/quick_reply/list',
+      'get'
+    );
+    yield put(receiveQuickReplyList(result.data.list));
+  } catch (error) {
+    yield put(receiveQuickReplyList([]));
+  }
+}
+
+export function* watchRequestQuickReplyList() {
+  while (true) {
+    yield take(types.REQUEST_QUICK_REPLY_LIST);
+    yield fork(requestQuickReplyList);
   }
 }

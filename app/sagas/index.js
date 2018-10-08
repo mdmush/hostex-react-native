@@ -6,7 +6,11 @@ import {
   watchAddHousesToGroups,
   watchCreateGroup
 } from './groups';
-import { watchRequestThreadList, watchRequestMessageDetail } from './messages';
+import {
+  watchRequestThreadList,
+  watchRequestMessageDetail,
+  watchRequestQuickReplyList
+} from './messages';
 
 export default function* rootSaga() {
   yield all([
@@ -18,6 +22,7 @@ export default function* rootSaga() {
     fork(watchCreateGroup),
 
     fork(watchRequestThreadList),
-    fork(watchRequestMessageDetail)
+    fork(watchRequestMessageDetail),
+    fork(watchRequestQuickReplyList)
   ]);
 }

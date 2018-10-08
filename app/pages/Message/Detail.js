@@ -20,6 +20,7 @@ import _ from 'lodash';
 import * as messageCreators from '../../actions/messages';
 import DetailItem from './DetailItem';
 import commonStyle from '../../common/commonStyle';
+import { PLATFORM_TYPE_INFO } from '../../common/config';
 
 const defaultSource = require('../../assets/default_user.png');
 
@@ -31,15 +32,29 @@ const propTypes = {
 class MessageDetail extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const customerInfo = navigation.getParam('customerInfo');
-    console.log('customerInfo: ', customerInfo);
     return {
-      title: customerInfo.name
+      headerTitle: (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image
+            source={PLATFORM_TYPE_INFO[customerInfo.thirdparty_type].icon_color}
+            style={{ width: 24, height: 24, marginRight: 10 }}
+          />
+          <Text allowFontScaling={false} style={{ fontSize: 14 }}>
+            {customerInfo.name}
+          </Text>
+        </View>
+      ),
+      headerRight: (
+        <TouchableOpacity style={{ paddingRight: 10 }}>
+          <Text allowFontScaling={false}>房态</Text>
+        </TouchableOpacity>
+      )
     };
   };
 
   constructor(props) {
     super(props);
-    this.state = { inputLocation: 0, modalOpen: false };
+    this.state = { inputLocation: 0, modalOpen: false, footerPanelOpen: false };
   }
 
   componentWillMount() {
@@ -163,12 +178,62 @@ class MessageDetail extends React.Component {
     );
   };
 
-  renderFooter = () => (
-    <View style={[styles.footer, { bottom: this.state.inputLocation }]}>
-      <TextInput placeholder="点击我输入文本" style={{ flex: 1 }} />
-      <Button title="发送" style={{ width: 100, height: 50 }} />
-    </View>
-  );
+  renderFooter = () => {
+    const { navigate } = this.props.navigation;
+    const panel = (
+      <View style={footer.panel}>
+        <TouchableOpacity
+          style={footer.panelItem}
+          onPress={() => navigate('ReplyList')}
+        >
+          <View style={footer.panelItemIcon}>
+            <Icon name="md-chatbubbles" size={40} />
+          </View>
+          <Text allowFontScaling={false}>快捷回复</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={footer.panelItem}>
+          <View style={footer.panelItemIcon}>
+            <Icon name="md-home" size={40} />
+          </View>
+          <Text allowFontScaling={false}>推荐房源</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={footer.panelItem}>
+          <View style={footer.panelItemIcon}>
+            <Icon name="md-images" size={40} />
+          </View>
+          <Text allowFontScaling={false}>照片</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={footer.panelItem}>
+          <View style={footer.panelItemIcon}>
+            <Icon name="md-aperture" size={40} />
+          </View>
+          <Text allowFontScaling={false}>拍摄</Text>
+        </TouchableOpacity>
+      </View>
+    );
+    return (
+      <View style={[footer.container, { bottom: this.state.inputLocation }]}>
+        <View style={footer.input}>
+          <TouchableOpacity
+            style={footer.add}
+            onPress={() =>
+              this.setState({ footerPanelOpen: !this.state.footerPanelOpen })
+            }
+          >
+            <Icon name="md-add-circle-outline" size={30} />
+          </TouchableOpacity>
+          <TextInput
+            placeholder="点击我输入文本"
+            style={{ flex: 1, height: 50 }}
+          />
+          <Button title="发送" style={{ width: 100, height: 50 }} />
+        </View>
+        {this.state.footerPanelOpen && panel}
+      </View>
+    );
+  };
+
+  renderFooterPanel = () => {};
 
   render() {
     return (
@@ -189,19 +254,53 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     marginBottom: 50
-  },
-  footer: {
+  }
+});
+
+const footer = StyleSheet.create({
+  container: {
     backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
+    // flexDirection: 'row',
+    // alignItems: 'center',
     position: 'absolute',
     left: 0,
     right: 0,
-    height: 50,
-    paddingLeft: 15,
-    paddingRight: 15,
+    // height: 50,
     borderTopColor: '#d9d9d9',
     borderWidth: 1
+  },
+  input: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  add: {
+    marginRight: 15
+  },
+  panel: {
+    borderTopColor: '#d9d9d9',
+    borderTopWidth: 1,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  panelItem: {
+    alignItems: 'center',
+    marginRight: 20
+  },
+  panelItemIcon: {
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#a7a7a7',
+    marginBottom: 10
   }
 });
 

@@ -34,9 +34,15 @@ export function requestMessageList(threadId) {
   };
 }
 
-export function receiveCustomerInfo(customerInfo) {
+export function requestQuickReplyList() {
   return {
-    type: types.RECEIVE_CUSTOMER_INFO,
-    customerInfo
+    type: types.REQUEST_QUICK_REPLY_LIST
+  };
+}
+
+export function receiveQuickReplyList(replyList) {
+  return {
+    type: types.RECEIVE_QUICK_REPLY_LIST,
+    replyList
   };
 }
