@@ -5,13 +5,15 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
+  DeviceEventEmitter
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as houseCreators from '../../actions/houses';
 import _ from 'lodash';
+import { SpaceTypes, EmitterEvents } from '../../common/config';
 
 const defaultSource = require('../../assets/default_pic.png');
 
@@ -35,6 +37,7 @@ class Recommend extends React.Component {
   }
 
   renderItem = item => {
+    const { goBack } = this.props.navigation;
     return (
       <View style={styles.item}>
         <View style={styles.itemLeft}>
@@ -58,13 +61,21 @@ class Recommend extends React.Component {
               {_.get(item, 'currency_type', 'CNY')}
             </Text>
             <Text style={[styles.normalText]} allowFontScaling={false}>
-              独立出租 {item.bedroom_count}室{item.living_room_count}厅
-              {item.bathroom_count}卫
+              {SpaceTypes[_.get(item, 'space_type', 0)]} {item.bedroom_count}室
+              {item.living_room_count}厅{item.bathroom_count}卫
             </Text>
           </View>
         </View>
         <View style={styles.itemRight}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              goBack();
+              DeviceEventEmitter.emit(
+                EmitterEvents.SELECT_RECOMMEND_HOUSE,
+                item
+              );
+            }}
+          >
             <Text style={styles.itemRightText} allowFontScaling={false}>
               推荐
             </Text>
@@ -115,8 +126,8 @@ const styles = StyleSheet.create({
   },
   itemCenter: {
     flex: 1,
-    paddingLeft: 5,
-    paddingRight: 5
+    paddingLeft: 10,
+    paddingRight: 10
   },
   itemCenterBottom: {
     flexDirection: 'row',

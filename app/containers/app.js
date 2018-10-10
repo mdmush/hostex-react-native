@@ -154,7 +154,7 @@ const App = createStackNavigator(
     EmptyHouses: { screen: EmptyHouses }
   },
   {
-    initialRouteName: 'Recommend',
+    initialRouteName: 'Home',
     headerMode: 'screen',
     navigationOptions: {
       headerStyle: {

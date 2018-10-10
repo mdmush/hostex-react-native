@@ -77,9 +77,15 @@ class MessageDetail extends React.Component {
     // Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
     // Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this));
 
-    this.subscription = DeviceEventEmitter.addListener(
-      EmitterEvents.SELECT_QUICK_REPLY,
-      params => this.setState({ message: params.content })
+    DeviceEventEmitter.addListener(EmitterEvents.SELECT_QUICK_REPLY, params =>
+      this.setState({ message: params.content })
+    );
+    DeviceEventEmitter.addListener(
+      EmitterEvents.SELECT_RECOMMEND_HOUSE,
+      params => {
+        const { house_id: houseId } = params;
+        messageActions.requestSendRecommend(this.threadId, houseId);
+      }
     );
   }
 
@@ -92,7 +98,8 @@ class MessageDetail extends React.Component {
     // Keyboard.removeAllListeners('keyboardWillShow');
     // Keyboard.removeAllListeners('keyboardWillHide');
 
-    this.subscription.remove();
+    DeviceEventEmitter.removeAllListeners(EmitterEvents.SELECT_QUICK_REPLY);
+    DeviceEventEmitter.removeAllListeners(EmitterEvents.SELECT_RECOMMEND_HOUSE);
     messageActions.receiveMessageList([]);
   }
 
@@ -218,7 +225,10 @@ class MessageDetail extends React.Component {
       <View style={footer.panel}>
         <TouchableOpacity
           style={footer.panelItem}
-          onPress={() => navigate('ReplyList')}
+          onPress={() => {
+            this.setState({ footerPanelOpen: false });
+            navigate('ReplyList');
+          }}
         >
           <View style={footer.panelItemIcon}>
             <Icon name="md-chatbubbles" size={40} />
@@ -227,7 +237,10 @@ class MessageDetail extends React.Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={footer.panelItem}
-          onPress={() => navigate('Recommend')}
+          onPress={() => {
+            this.setState({ footerPanelOpen: false });
+            navigate('Recommend');
+          }}
         >
           <View style={footer.panelItemIcon}>
             <Icon name="md-home" size={40} />

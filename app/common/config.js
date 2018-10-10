@@ -83,6 +83,14 @@ export const PLATFORM_TYPE_INFO = {
   }
 };
 
+export const SpaceTypes = {
+  0: '未知',
+  1: '整套房源',
+  2: '独立房间',
+  3: '合住房间'
+};
+
 export const EmitterEvents = {
-  SELECT_QUICK_REPLY: 'SELECT_QUICK_REPLY'
+  SELECT_QUICK_REPLY: 'SELECT_QUICK_REPLY',
+  SELECT_RECOMMEND_HOUSE: 'SELECT_RECOMMEND_HOUSE'
 };

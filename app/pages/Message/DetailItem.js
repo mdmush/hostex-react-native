@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, Button, StyleSheet } from 'react-native';
 import _ from 'lodash';
 
 const defaultSource = require('../../assets/default_user.png');
@@ -8,6 +8,14 @@ class DetailItem extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  renderBox = data => {
+    return (
+      <View style={box.container}>
+        <Text style={box.text}>{data.message}</Text>
+      </View>
+    );
+  };
 
   renderText = (isHost, data) => {
     return (
@@ -33,7 +41,7 @@ class DetailItem extends React.Component {
         >
           市中心三里屯
         </Text>
-        <View style={styles}>
+        <View style={styles.info}>
           {_.map(data.display.descriptions, i => (
             <Text
               key={i}
@@ -49,8 +57,59 @@ class DetailItem extends React.Component {
             </Text>
           ))}
         </View>
+        <View style={styles.footer}>{this.renderCardBtns(data)}</View>
       </View>
     );
+  };
+
+  renderCardBtns = data => {
+    /** 预准 */
+    if (data.display.card_type === 'HostexSpecialOffer') {
+      if (data.status === 1 && data.display.status === 'waiting') {
+        return (
+          <>
+            <Button title="接受" />
+            <Button title="拒绝" />
+          </>
+        );
+      } else if (data.status === 0 && data.display.status === 'accepted') {
+        return <Button title="已接受" />;
+      } else if (data.status === 0 && data.display.status === 'denied') {
+        return <Button title="已拒绝" />;
+      } else if (data.display.status === 'expired') {
+        return <Button title="已过期" />;
+      }
+      /** 订单 */
+    } else if (data.display.card_type === 'InquiryReservation') {
+      const status = _.get(data, 'attachment.status');
+      if (status === 'wait_accept') {
+        return (
+          <>
+            <Button title="接受" />
+            <Button title="拒绝" />
+          </>
+        );
+      } else if (status === 'accepted') {
+        return <Button title="已同意" />;
+      } else if (status === 'denied') {
+        return <Button title="已拒绝" />;
+      } else if (status === 'wait_pay') {
+        return <Button title="等待支付" />;
+      } else if (status === 'cancelled') {
+        return <Button title="已取消" />;
+      }
+
+      /** 修改订单 */
+    } else if (data.display.card_type === 'ReservationAlteration') {
+      if (data.status === 0) {
+        return (
+          <>
+            <Button title="接受" />
+            <Button title="拒绝" />
+          </>
+        );
+      }
+    }
   };
 
   render() {
@@ -71,19 +130,23 @@ class DetailItem extends React.Component {
         content = <Text>未知类型的消息[ {data.display_type} ]</Text>;
     }
 
-    return (
-      <View style={isHost ? styles.hostContainer : styles.guestContainer}>
-        <Image source={defaultSource} style={{ width: 30, height: 30 }} />
-        <View
-          style={[
-            styles.content,
-            isHost ? styles.hostContent : styles.guestContent
-          ]}
-        >
-          {content}
+    if (data.display_type === 'Box') {
+      return this.renderBox(data);
+    } else {
+      return (
+        <View style={isHost ? styles.hostContainer : styles.guestContainer}>
+          <Image source={defaultSource} style={{ width: 30, height: 30 }} />
+          <View
+            style={[
+              styles.content,
+              isHost ? styles.hostContent : styles.guestContent
+            ]}
+          >
+            {content}
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
   }
 }
 
@@ -128,6 +191,21 @@ const styles = StyleSheet.create({
   },
   hostCard: {},
   guestCard: {}
+});
+
+const box = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  text: {
+    height: 20,
+    lineHeight: 20,
+    backgroundColor: 'rgba(167,167,167, .3)',
+    paddingLeft: 30,
+    paddingRight: 30
+  }
 });
 
 export default DetailItem;

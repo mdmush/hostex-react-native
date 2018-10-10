@@ -140,6 +140,7 @@ export function* requestSendText(params) {
 export function* requestSendRecommend(params) {
   try {
     yield call(RequestUtil.post, 'mobile_api/chat/send_recommend', params);
+    yield fork(requestMessageList, { thread_id: params.thread_id });
   } catch (error) {}
 }
 

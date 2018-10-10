@@ -90,7 +90,7 @@ class ReplyList extends React.Component {
             <TouchableOpacity
               onPress={() => {
                 goBack();
-                DeviceEventEmitter.emit('SELECT_QUICK_REPLY', item);
+                DeviceEventEmitter.emit(EmitterEvents.SELECT_QUICK_REPLY, item);
               }}
             >
               <Text
