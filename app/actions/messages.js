@@ -46,3 +46,43 @@ export function receiveQuickReplyList(replyList) {
     replyList
   };
 }
+
+export function requestDeleteQuickReply(id) {
+  return {
+    type: types.REQUEST_DELETE_QUICK_REPLY,
+    id
+  };
+}
+
+export function requestModifyQuickReply(id, title, content) {
+  return {
+    type: types.REQUEST_MODIFY_QUICK_REPLY,
+    id,
+    title,
+    content
+  };
+}
+
+export function requestCreateQuickReply(title, content) {
+  return {
+    type: types.REQUEST_CREATE_QUICK_REPLY,
+    title,
+    content
+  };
+}
+
+export function requestSendText(threadId, message) {
+  return {
+    type: types.REQUEST_SEND_TEXT,
+    threadId,
+    message
+  };
+}
+
+export function requestSendRecommend(threadId, houseId) {
+  return {
+    type: types.REQUEST_SEND_RECOMMEND,
+    threadId,
+    houseId
+  };
+}

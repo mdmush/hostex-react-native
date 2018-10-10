@@ -8,7 +8,8 @@ import {
   Platform,
   TouchableOpacity,
   FlatList,
-  RefreshControl
+  RefreshControl,
+  InteractionManager
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -29,8 +30,8 @@ class Messages extends React.Component {
 
   componentDidMount() {
     const { messageActions } = this.props;
-    messageActions.requestThreadList({
-      page: 1
+    InteractionManager.runAfterInteractions(() => {
+      messageActions.requestThreadList({ page: 1 });
     });
   }
 

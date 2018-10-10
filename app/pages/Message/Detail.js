@@ -9,7 +9,9 @@ import {
   FlatList,
   TextInput,
   Button,
-  Keyboard
+  Keyboard,
+  DeviceEventEmitter,
+  InteractionManager
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Modal from 'react-native-modalbox';
@@ -20,7 +22,7 @@ import _ from 'lodash';
 import * as messageCreators from '../../actions/messages';
 import DetailItem from './DetailItem';
 import commonStyle from '../../common/commonStyle';
-import { PLATFORM_TYPE_INFO } from '../../common/config';
+import { PLATFORM_TYPE_INFO, EmitterEvents } from '../../common/config';
 
 const defaultSource = require('../../assets/default_user.png');
 
@@ -45,7 +47,7 @@ class MessageDetail extends React.Component {
         </View>
       ),
       headerRight: (
-        <TouchableOpacity style={{ paddingRight: 10 }}>
+        <TouchableOpacity style={{ paddingRight: 18 }}>
           <Text allowFontScaling={false}>房态</Text>
         </TouchableOpacity>
       )
@@ -54,20 +56,44 @@ class MessageDetail extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { inputLocation: 0, modalOpen: false, footerPanelOpen: false };
+    this.state = {
+      inputLocation: 0,
+      modalOpen: false,
+      footerPanelOpen: false,
+      message: ''
+    };
   }
 
-  componentWillMount() {
-    const { messageActions, navigation } = this.props;
-    const threadId = navigation.getParam('threadId');
-    messageActions.requestMessageList(threadId);
-  }
+  componentWillMount() {}
 
   componentDidMount() {
+    const { messageActions, navigation } = this.props;
+    InteractionManager.runAfterInteractions(() => {
+      this.threadId = navigation.getParam('threadId');
+      messageActions.requestMessageList(this.threadId);
+    });
     // const { messages, navigation } = this.props;
 
-    Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
-    Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this));
+    // Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this));
+    // Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this));
+
+    this.subscription = DeviceEventEmitter.addListener(
+      EmitterEvents.SELECT_QUICK_REPLY,
+      params => this.setState({ message: params.content })
+    );
+  }
+
+  // getSnapshotBeforeUpdate() {
+  //   this.refs.list.scrollToEnd();
+  // }
+
+  componentWillUnmount() {
+    const { messageActions } = this.props;
+    // Keyboard.removeAllListeners('keyboardWillShow');
+    // Keyboard.removeAllListeners('keyboardWillHide');
+
+    this.subscription.remove();
+    messageActions.receiveMessageList([]);
   }
 
   keyboardWillShow = e => {
@@ -76,6 +102,13 @@ class MessageDetail extends React.Component {
 
   keyboardWillHide = e => {
     this.setState({ inputLocation: 0 });
+  };
+
+  sendText = () => {
+    this.setState({ message: '' });
+
+    const { messageActions } = this.props;
+    messageActions.requestSendText(this.threadId, this.state.message);
   };
 
   renderCollapseIcon = () => {
@@ -170,6 +203,7 @@ class MessageDetail extends React.Component {
     const { messages } = this.props;
     return (
       <FlatList
+        ref="list"
         style={styles.list}
         data={messages.messageList}
         renderItem={this.renderItem}
@@ -191,7 +225,10 @@ class MessageDetail extends React.Component {
           </View>
           <Text allowFontScaling={false}>快捷回复</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={footer.panelItem}>
+        <TouchableOpacity
+          style={footer.panelItem}
+          onPress={() => navigate('Recommend')}
+        >
           <View style={footer.panelItemIcon}>
             <Icon name="md-home" size={40} />
           </View>
@@ -223,10 +260,17 @@ class MessageDetail extends React.Component {
             <Icon name="md-add-circle-outline" size={30} />
           </TouchableOpacity>
           <TextInput
+            autoCapitalize="none"
             placeholder="点击我输入文本"
             style={{ flex: 1, height: 50 }}
+            value={this.state.message}
+            onChangeText={message => this.setState({ message })}
           />
-          <Button title="发送" style={{ width: 100, height: 50 }} />
+          <Button
+            title="发送"
+            style={{ width: 100, height: 50 }}
+            onPress={this.sendText}
+          />
         </View>
         {this.state.footerPanelOpen && panel}
       </View>

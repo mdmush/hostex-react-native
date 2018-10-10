@@ -41,11 +41,13 @@ class ItemCell extends React.Component {
           style={styles.container}
           onPress={() => onPress(data)}
         >
-          <Image
-            style={styles.itemImg}
-            source={{ uri: _.get(data, 'house_pictrue.original_url') }}
-            defaultSource={defaultSource}
-          />
+          <View style={styles.itemImg}>
+            <Image
+              style={{ width: 90, height: 60 }}
+              source={{ uri: _.get(data, 'house_pictrue.original_url') }}
+              defaultSource={defaultSource}
+            />
+          </View>
           <View style={styles.itemRightContent}>
             <Text style={styles.title}>
               {_.get(data, 'house_descriptions[0].title')}

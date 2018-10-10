@@ -2,14 +2,17 @@ import { put, take, call, fork } from 'redux-saga/effects';
 import RequestUtil from '../utils/RequestUtil';
 import ToastUtil from '../utils/ToastUtil';
 import * as types from '../constants/ActionTypes';
-import { fetchHouseList, receiveHouseList } from '../actions/houses';
+import {
+  fetchHouseList,
+  receiveHouseList,
+  receiveRecommendHouseList
+} from '../actions/houses';
 export function* requestHouseList(params) {
   try {
     yield put(fetchHouseList());
     const houseList = yield call(
-      RequestUtil.request,
+      RequestUtil.get,
       'mobile_api/house_relation/hostex_house_list',
-      'get',
       params
     );
     yield put(receiveHouseList(houseList.data.list));
@@ -47,5 +50,25 @@ export function* watchRequestTitleAlias() {
       house_id: houseId,
       title_alias: titleAlias
     });
+  }
+}
+
+export function* requestRecommendHouseList() {
+  try {
+    const result = yield call(
+      RequestUtil.get,
+      'mobile_api/chat/recommend_list'
+    );
+    yield put(receiveRecommendHouseList(result.data.list));
+  } catch (error) {
+    console.log('error: ', error);
+    yield put(receiveRecommendHouseList([]));
+  }
+}
+
+export function* watchRequestRecommendHouseList() {
+  while (true) {
+    yield take(types.REQUEST_RECOMMEND_HOUSE_LIST);
+    yield fork(requestRecommendHouseList);
   }
 }

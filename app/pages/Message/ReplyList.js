@@ -4,14 +4,18 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Alert,
+  DeviceEventEmitter
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CheckBox from 'react-native-check-box';
 import _ from 'lodash';
 import * as messageCreators from '../../actions/messages';
+import { EmitterEvents } from '../../common/config';
 
 const propTypes = {
   messageActions: PropTypes.object,
@@ -20,26 +24,75 @@ const propTypes = {
 
 class ReplyList extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: '快捷回复'
+    title: '快捷回复',
+    headerRight: (
+      <TouchableOpacity
+        style={{ paddingRight: 18 }}
+        onPress={() => navigation.state.params.navigateRightPress()}
+      >
+        <Text allowFontScaling={false}>
+          {navigation.getParam('headerRightTitle', '编辑')}
+        </Text>
+      </TouchableOpacity>
+    )
   });
 
   constructor(props) {
     super(props);
-  }
+    this.state = { editing: false };
 
-  componentDidMount() {
     const { messageActions } = this.props;
-    console.log('messageActions: ', messageActions);
     messageActions.requestQuickReplyList();
   }
 
+  componentDidMount() {
+    this.props.navigation.setParams({
+      navigateRightPress: this.onNavigateRightPress
+    });
+  }
+
+  onNavigateRightPress = () => {
+    this.setState({ editing: !this.state.editing }, () => {
+      this.props.navigation.setParams({
+        headerRightTitle: this.state.editing ? '取消' : '编辑'
+      });
+    });
+  };
+
+  confirmDelete = item => {
+    const { messageActions } = this.props;
+    Alert.alert('删除快捷回复', '您确定不再需要此快捷回复了吗？', [
+      {
+        text: '取消',
+        onPress: () => {}
+      },
+      {
+        text: '确定',
+        onPress: () => messageActions.requestDeleteQuickReply(item.id)
+      }
+    ]);
+  };
+
   renderItem = item => {
+    const { navigate, goBack } = this.props.navigation;
     return (
       <View style={styles.item} key={item.id}>
-        <CheckBox style={{ paddingRight: 10 }} isChecked={item.checked} />
+        {this.state.editing && (
+          <TouchableOpacity
+            style={{ paddingRight: 15 }}
+            onPress={() => this.confirmDelete(item)}
+          >
+            <Icon name="md-remove-circle" size={24} />
+          </TouchableOpacity>
+        )}
         <View style={styles.itemContainer}>
           <View style={styles.itemTitle}>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                goBack();
+                DeviceEventEmitter.emit('SELECT_QUICK_REPLY', item);
+              }}
+            >
               <Text
                 style={{
                   fontSize: 16,
@@ -49,16 +102,18 @@ class ReplyList extends React.Component {
                 }}
                 allowFontScaling={false}
               >
-                入住欢迎
+                {item.title}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity>
-              <Text allowFontScaling={false}>编辑</Text>
-            </TouchableOpacity>
+            {this.state.editing && (
+              <TouchableOpacity onPress={() => navigate('ReplyAdd', { item })}>
+                <Text allowFontScaling={false}>编辑</Text>
+              </TouchableOpacity>
+            )}
           </View>
           <View style={styles.itemContent}>
             <Text style={{ lineHeight: 22 }} allowFontScaling={false}>
-              您好，感谢您入住我的房源，我在这里为您准备了各种好吃的好玩的，您可以尽情享受在这个温馨小窝中的幸福时光，祝您一切愉快。
+              {item.content}
             </Text>
           </View>
         </View>
@@ -67,31 +122,40 @@ class ReplyList extends React.Component {
   };
 
   renderList = () => {
-    const arr = [
-      { checked: false, id: 1 },
-      { checked: false, id: 2 },
-      { checked: false, id: 3 },
-      { checked: false, id: 4 }
-    ];
-    return _.map(arr, item => {
+    const { messages } = this.props;
+    return _.map(messages.replyList, item => {
       return this.renderItem(item);
     });
   };
 
   render() {
+    const { navigate } = this.props.navigation;
     return (
-      <ScrollView style={styles.container}>
-        {this.renderList()}
-        <Text style={styles.tip} allowFontScaling={false}>
-          点击标题即可快速复制正文到输入框
-        </Text>
-      </ScrollView>
+      <View style={styles.container}>
+        <ScrollView style={styles.body}>
+          {this.renderList()}
+          <Text style={styles.tip} allowFontScaling={false}>
+            点击标题即可快速复制正文到输入框
+          </Text>
+        </ScrollView>
+        <TouchableOpacity
+          style={styles.footer}
+          onPress={() => navigate('ReplyAdd')}
+        >
+          <Text style={styles.footerText} allowFontScaling={false}>
+            添加一条快捷回复
+          </Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  body: {
     flex: 1
   },
   item: {
@@ -121,6 +185,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     height: 28,
     lineHeight: 28
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    right: 10,
+    height: 40,
+    backgroundColor: '#1ac7a1'
+  },
+  footerText: {
+    height: 40,
+    lineHeight: 40,
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 16
   }
 });
 

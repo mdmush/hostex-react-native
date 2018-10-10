@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet
 } from 'react-native';
+import RequestUtil from '../../utils/RequestUtil';
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -15,29 +16,41 @@ export default class Login extends React.Component {
   }
 
   login = () => {
-    return fetch('http://i.test177.xiaogechuangxin.com/mobile_api/user/login', {
-      credentials: 'include',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: this.state.username,
-        password: this.state.password
-      })
+    return RequestUtil.post('mobile_api/user/login', {
+      username: this.state.username,
+      password: this.state.password
     })
-      .then(result => {
-        console.log('login:', result);
-        return result.json();
-      })
       .then(res => {
-        console.log('login success');
         const { navigate } = this.props.navigation;
         navigate('MessageList');
       })
       .catch(err => {
-        console.log('login fail', err);
+        console.log('err:', err);
       });
+
+    // return fetch('http://i.test177.xiaogechuangxin.com/mobile_api/user/login', {
+    //   credentials: 'include',
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json;charset=utf-8'
+    //   },
+    //   body: JSON.stringify({
+    //     username: this.state.username,
+    //     password: this.state.password
+    //   })
+    // })
+    //   .then(result => {
+    //     console.log('login:', result);
+    //     return result.json();
+    //   })
+    //   .then(res => {
+    //     console.log('login success');
+    //     const { navigate } = this.props.navigation;
+    //     navigate('MessageList');
+    //   })
+    //   .catch(err => {
+    //     console.log('login fail', err);
+    //   });
   };
 
   render() {

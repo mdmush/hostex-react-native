@@ -1,6 +1,10 @@
 import { all, fork } from 'redux-saga/effects';
 
-import { watchRequestHouseList, watchRequestTitleAlias } from './houses';
+import {
+  watchRequestHouseList,
+  watchRequestTitleAlias,
+  watchRequestRecommendHouseList
+} from './houses';
 import {
   watchRequestGroupList,
   watchAddHousesToGroups,
@@ -9,13 +13,19 @@ import {
 import {
   watchRequestThreadList,
   watchRequestMessageDetail,
-  watchRequestQuickReplyList
+  watchRequestQuickReplyList,
+  watchRequestDeleteQuickReply,
+  watchRequestModifyQuickReply,
+  watchRequestCreateQuickReply,
+  watchRequestSendText,
+  watchRequestSendRecommend
 } from './messages';
 
 export default function* rootSaga() {
   yield all([
     fork(watchRequestHouseList),
     fork(watchRequestTitleAlias),
+    fork(watchRequestRecommendHouseList),
 
     fork(watchRequestGroupList),
     fork(watchAddHousesToGroups),
@@ -23,6 +33,11 @@ export default function* rootSaga() {
 
     fork(watchRequestThreadList),
     fork(watchRequestMessageDetail),
-    fork(watchRequestQuickReplyList)
+    fork(watchRequestQuickReplyList),
+    fork(watchRequestDeleteQuickReply),
+    fork(watchRequestModifyQuickReply),
+    fork(watchRequestCreateQuickReply),
+    fork(watchRequestSendText),
+    fork(watchRequestSendRecommend)
   ]);
 }

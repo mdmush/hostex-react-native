@@ -12,6 +12,7 @@ class DetailItem extends React.Component {
   renderText = (isHost, data) => {
     return (
       <Text style={isHost ? styles.hostText : styles.guestText}>
+        {data.sendStatus === 1 && '发送中：'}
         {data.message}
       </Text>
     );
@@ -35,6 +36,7 @@ class DetailItem extends React.Component {
         <View style={styles}>
           {_.map(data.display.descriptions, i => (
             <Text
+              key={i}
               style={{
                 fontSize: 13,
                 height: 18,
@@ -115,9 +117,13 @@ const styles = StyleSheet.create({
   },
   hostText: {
     // padding: 10
+    fontSize: 14,
+    lineHeight: 20,
     color: '#fff'
   },
   guestText: {
+    fontSize: 14,
+    lineHeight: 20,
     color: '#000'
   },
   hostCard: {},

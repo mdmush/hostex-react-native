@@ -82,3 +82,7 @@ export const PLATFORM_TYPE_INFO = {
     order: 7
   }
 };
+
+export const EmitterEvents = {
+  SELECT_QUICK_REPLY: 'SELECT_QUICK_REPLY'
+};

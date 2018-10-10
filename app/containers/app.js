@@ -12,8 +12,10 @@ import Mine from '../pages/Setting/Mine';
 import Workbench from '../pages/Workbench/Workbench';
 
 import HouseDetail from '../pages/House/Detail';
+import Recommend from '../pages/House/Recommend';
 import MessageDetail from '../pages/Message/Detail';
 import ReplyList from '../pages/Message/ReplyList';
+import ReplyAdd from '../pages/Message/ReplyAdd';
 import Login from '../pages/Login/Login';
 import More from '../pages/Setting/More';
 import EmptyHouses from '../pages/Workbench/EmptyHouses';
@@ -70,7 +72,7 @@ const TabContainer = createBottomTabNavigator(
     }
   },
   {
-    initialRouteName: 'MessageList',
+    initialRouteName: 'HouseList',
     tabBarOptions: {
       //当前选中的tab bar的文本颜色和图标颜色
       activeTintColor: '#4BC1D2',
@@ -137,9 +139,11 @@ const App = createStackNavigator(
         header: null
       })
     },
+    Recommend: { screen: Recommend },
     GroupSelect: { screen: GroupSelect },
     MessageDetail: { screen: MessageDetail },
     ReplyList: { screen: ReplyList },
+    ReplyAdd: { screen: ReplyAdd },
     Login: {
       screen: Login,
       navigationOptions: () => ({
@@ -150,7 +154,7 @@ const App = createStackNavigator(
     EmptyHouses: { screen: EmptyHouses }
   },
   {
-    initialRouteName: 'ReplyList',
+    initialRouteName: 'Recommend',
     headerMode: 'screen',
     navigationOptions: {
       headerStyle: {

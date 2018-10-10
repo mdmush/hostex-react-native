@@ -34,3 +34,16 @@ export function requestTitleAlias(houseId, titleAlias) {
     titleAlias
   };
 }
+
+export function requestRecommendHouseList() {
+  return {
+    type: types.REQUEST_RECOMMEND_HOUSE_LIST
+  };
+}
+
+export function receiveRecommendHouseList(houseList) {
+  return {
+    type: types.RECEIVE_RECOMMEND_HOUSE_LIST,
+    houseList
+  };
+}
