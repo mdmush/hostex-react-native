@@ -135,7 +135,31 @@ class MessageDetail extends React.Component {
     );
   };
 
-  renderModalItem = () => {
+  renderModalHouseInfo = houseInfo => {
+    <View style={modal.item}>
+      <View style={modal.content}>
+        <View style={modal.leftPart}>
+          <Image source={defaultSource} style={{ width: 60, height: 60 }} />
+        </View>
+        <View style={modal.rightPart}>
+          <Text style={modal.title} allowFontScaling={false}>
+            {_.get(houseInfo, 'title', '未知房源')}
+          </Text>
+          <View style={modal.info}>
+            <View style={modal.status}>
+              <Text allowFontScaling={false}>待确认</Text>
+              <Text allowFontScaling={false}>|8月16-8月17|2人|1晚</Text>
+            </View>
+            <Text style={modal.platform} allowFontScaling={false}>
+              小猪短租
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>;
+  };
+
+  renderModalOrderList = () => {
     return (
       <View style={modal.item}>
         <View style={modal.content}>
@@ -175,6 +199,13 @@ class MessageDetail extends React.Component {
   };
 
   renderModal = () => {
+    const { messages } = this.props;
+
+    const content = messages.messageOrderList.length
+      ? this.renderModalOrderList()
+      : this.renderModalHouseInfo(messages.messageHouseInfo);
+
+    console.log('content: ', content);
     return (
       <Modal
         isOpen={this.state.modalOpen}
@@ -185,9 +216,7 @@ class MessageDetail extends React.Component {
         keyboardTopOffset={0}
         style={{ height: 140 }}
       >
-        <ScrollView style={modal.container}>
-          {this.renderModalItem()}
-        </ScrollView>
+        <ScrollView style={modal.container}>{content}</ScrollView>
         <TouchableOpacity
           onPress={() => this.setState({ modalOpen: false })}
           style={{
@@ -206,7 +235,7 @@ class MessageDetail extends React.Component {
     return <DetailItem data={item} />;
   };
 
-  renderList = dataSource => {
+  renderList = () => {
     const { messages } = this.props;
     return (
       <FlatList
@@ -293,11 +322,33 @@ class MessageDetail extends React.Component {
   renderFooterPanel = () => {};
 
   render() {
+    const { messages } = this.props;
+
+    const showModal =
+      messages.messageHouseInfo || messages.messageOrderList.length;
+
+    const showCollapse = showModal && !this.state.modalOpen;
+
+    const collapseIcon = (
+      <View style={collapse.container}>
+        <TouchableOpacity
+          style={collapse.wrapper}
+          onPress={() =>
+            this.setState({
+              modalOpen: true
+            })
+          }
+        >
+          <Icon name="md-arrow-dropdown-circle" size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
+    );
+
     return (
       <View style={styles.container}>
-        {!this.state.modalOpen && this.renderCollapseIcon()}
-        {this.renderModal()}
-        {this.renderList(this.state.dataSource)}
+        {showCollapse ? this.renderCollapseIcon() : null}
+        {showModal ? this.renderModal() : null}
+        {this.renderList()}
         {this.renderFooter()}
       </View>
     );

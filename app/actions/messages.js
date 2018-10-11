@@ -27,6 +27,20 @@ export function receiveMessageList(messageList) {
   };
 }
 
+export function receiveMessageHouseInfo(houseInfo) {
+  return {
+    type: types.RECEIVE_MESSAGE_HOUSE_INFO,
+    houseInfo
+  };
+}
+
+export function receiveMessageOrderList(orderList) {
+  return {
+    type: types.RECEIVE_MESSAGE_ORDER_LIST,
+    orderList
+  };
+}
+
 export function requestMessageList(threadId) {
   return {
     type: types.REQUEST_MESSAGE_LIST,

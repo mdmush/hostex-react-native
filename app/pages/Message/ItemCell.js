@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import _ from 'lodash';
+import { PLATFORM_TYPE_INFO, OrderStatus } from '../../common/config';
 
 const defaultSource = require('../../assets/default_user.png');
 
@@ -23,9 +24,14 @@ const ItemCell = ({ data, onPressHandler }) => (
       </View>
       <View style={styles.itemRightContent}>
         <View style={styles.itemRightTop}>
-          <Text style={styles.gray} allowFontScaling={false}>
-            {_.get(data, 'thirdparty_tenant_customer.name')}
-          </Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.gray} allowFontScaling={false}>
+              {_.get(data, 'thirdparty_tenant_customer.name')}
+            </Text>
+            <Text style={styles.gray} allowFontScaling={false}>
+              - {OrderStatus[data.reservation_status]}
+            </Text>
+          </View>
           <Text style={styles.gray}>{_.get(data, 'last_message_time')}</Text>
         </View>
         <Text
@@ -40,7 +46,7 @@ const ItemCell = ({ data, onPressHandler }) => (
             {data.house_title}
           </Text>
           <Text style={styles.houseType} allowFontScaling={false}>
-            民宿微店
+            {_.get(PLATFORM_TYPE_INFO[data.thirdparty_type], 'name', '未知')}
           </Text>
         </View>
       </View>

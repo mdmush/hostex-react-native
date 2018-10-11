@@ -10,15 +10,12 @@ axios.defaults.withCredentials = true;
 
 function request(method, url, params) {
   console.log('url: ', `${baseUrl}${url}`);
-  console.log('params: ', params);
   return new Promise((resolve, reject) => {
     axios[method](url, params)
       .then(response => {
-        console.log('resoponse: ', response);
         resolve(response.data);
       })
       .catch(error => {
-        console.log('error: ', error);
         reject(error);
       });
   });

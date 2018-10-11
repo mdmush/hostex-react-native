@@ -48,8 +48,8 @@ export const PLATFORM_TYPE_INFO = {
   6: {
     type: 6,
     name: '微店',
-    icon: require('../assets/icon_shop.svg'),
-    icon_color: require('../assets/icon_shop_color.svg'),
+    icon: require('../assets/icon_shop.png'),
+    icon_color: require('../assets/icon_shop_color.png'),
     user_page_url: '',
     show: false,
     order: 100
@@ -93,4 +93,15 @@ export const SpaceTypes = {
 export const EmitterEvents = {
   SELECT_QUICK_REPLY: 'SELECT_QUICK_REPLY',
   SELECT_RECOMMEND_HOUSE: 'SELECT_RECOMMEND_HOUSE'
+};
+
+export const OrderStatus = {
+  completed: '已完成',
+  wait_stay: '待入住',
+  staying: '入住中',
+  wait_pay: '待支付',
+  cancelled: '已取消',
+  denied: '已拒绝',
+  wait_accept: '待确认',
+  timeout: '已失效'
 };

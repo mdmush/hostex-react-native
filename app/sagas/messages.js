@@ -7,6 +7,8 @@ import {
   receiveThreadList,
   fetchMessageList,
   receiveMessageList,
+  receiveMessageHouseInfo,
+  receiveMessageOrderList,
   receiveQuickReplyList
 } from '../actions/messages';
 
@@ -33,12 +35,25 @@ export function* watchRequestThreadList() {
 export function* requestMessageList(params) {
   try {
     yield put(fetchMessageList());
+
     const result = yield call(
       RequestUtil.get,
       'mobile_api/chat/chat_detail',
       params
     );
-    yield put(receiveMessageList(result.data.list.reverse()));
+    const { house_info: houseInfo, list } = result.data;
+    yield put(receiveMessageList(list.reverse()));
+
+    if (houseInfo) {
+      const houses = yield call(
+        RequestUtil.get,
+        'mobile_api/calendar/house_summary_list'
+      );
+      const house = _.find(houses.data.list, { id: houseInfo.house_id });
+      yield put(receiveMessageHouseInfo(house));
+    } else {
+      yield put(receiveMessageHouseInfo(null));
+    }
   } catch (error) {
     yield put(receiveMessageList([]));
   }
@@ -131,9 +146,10 @@ export function* requestSendText(params) {
 
     yield call(RequestUtil.post, 'mobile_api/chat/send_text', params);
 
-    const index = _.findLastIndex(newMsgList, { uniqueId });
-    message.sendStatus = 2 && newMsgList.splice(index, 1, message);
-    yield put(receiveMessageList(newMsgList.slice(0)));
+    yield fork(requestMessageList, { thread_id: params.thread_id });
+    // const index = _.findLastIndex(newMsgList, { uniqueId });
+    // message.sendStatus = 2 && newMsgList.splice(index, 1, message);
+    // yield put(receiveMessageList(newMsgList.slice(0)));
   } catch (error) {}
 }
 

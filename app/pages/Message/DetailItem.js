@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Image, Button, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
+import Button from 'react-native-button';
 import _ from 'lodash';
 
 const defaultSource = require('../../assets/default_user.png');
@@ -26,7 +27,72 @@ class DetailItem extends React.Component {
     );
   };
 
+  renderHouseLink = (isHost, data) => {
+    return (
+      <View style={isHost ? styles.hostCard : styles.guestCard}>
+        <Text
+          allowFontScaling={false}
+          style={{ fontSize: 13, color: '#a7a7a7' }}
+        >
+          {_.get(data, 'display.title', '标题')}
+        </Text>
+        <View style={styles.info}>
+          {_.map(data.display.descriptions, i => (
+            <Text
+              key={i}
+              style={{
+                fontSize: 13,
+                height: 18,
+                lineHeight: 18
+              }}
+              allowFontScaling={false}
+            >
+              {i}
+            </Text>
+          ))}
+        </View>
+      </View>
+    );
+  };
+
+  renderRecommendHouse = (isHost, data) => {
+    return (
+      <View style={isHost ? styles.hostCard : styles.guestCard}>
+        <Text
+          allowFontScaling={false}
+          style={{ fontSize: 13, color: '#a7a7a7' }}
+        >
+          {_.get(data, 'display.title', '标题')}
+        </Text>
+        <View style={recommend.container}>
+          <View style={recommend.left}>
+            <Image source={defaultSource} style={{ width: 30, height: 30 }} />
+          </View>
+          <View style={recommend.right}>
+            {_.map(data.display.descriptions, i => (
+              <Text
+                key={i}
+                style={{
+                  fontSize: 13,
+                  height: 18,
+                  lineHeight: 18
+                }}
+                allowFontScaling={false}
+              >
+                {i}
+              </Text>
+            ))}
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   renderCard = (isHost, data) => {
+    if (data.display.card_type === 'ShopRecommendHouse') {
+      return this.renderRecommendHouse(isHost, data);
+    }
+
     return (
       <View style={isHost ? styles.hostCard : styles.guestCard}>
         <Text
@@ -48,8 +114,7 @@ class DetailItem extends React.Component {
               style={{
                 fontSize: 13,
                 height: 18,
-                lineHeight: 18,
-                textAlignVertical: 'center'
+                lineHeight: 18
               }}
               allowFontScaling={false}
             >
@@ -68,16 +133,16 @@ class DetailItem extends React.Component {
       if (data.status === 1 && data.display.status === 'waiting') {
         return (
           <>
-            <Button title="接受" />
-            <Button title="拒绝" />
+            <Button>接受</Button>
+            <Button>拒绝</Button>
           </>
         );
       } else if (data.status === 0 && data.display.status === 'accepted') {
-        return <Button title="已接受" />;
+        return <Button>已接受</Button>;
       } else if (data.status === 0 && data.display.status === 'denied') {
-        return <Button title="已拒绝" />;
+        return <Button>已拒绝</Button>;
       } else if (data.display.status === 'expired') {
-        return <Button title="已过期" />;
+        return <Button>已过期</Button>;
       }
       /** 订单 */
     } else if (data.display.card_type === 'InquiryReservation') {
@@ -85,18 +150,22 @@ class DetailItem extends React.Component {
       if (status === 'wait_accept') {
         return (
           <>
-            <Button title="接受" />
-            <Button title="拒绝" />
+            <Button>接受</Button>
+            <Button>拒绝</Button>
           </>
         );
       } else if (status === 'accepted') {
-        return <Button title="已同意" />;
+        return <Button>已同意</Button>;
       } else if (status === 'denied') {
-        return <Button title="已拒绝" />;
+        return <Button>已拒绝</Button>;
       } else if (status === 'wait_pay') {
-        return <Button title="等待支付" />;
+        return <Button>等待支付</Button>;
       } else if (status === 'cancelled') {
-        return <Button title="已取消" />;
+        return (
+          <Button disabled={true} style={button.common}>
+            已取消
+          </Button>
+        );
       }
 
       /** 修改订单 */
@@ -104,8 +173,8 @@ class DetailItem extends React.Component {
       if (data.status === 0) {
         return (
           <>
-            <Button title="接受" />
-            <Button title="拒绝" />
+            <Button>接受</Button>
+            <Button>拒绝</Button>
           </>
         );
       }
@@ -134,15 +203,24 @@ class DetailItem extends React.Component {
       return this.renderBox(data);
     } else {
       return (
-        <View style={isHost ? styles.hostContainer : styles.guestContainer}>
-          <Image source={defaultSource} style={{ width: 30, height: 30 }} />
-          <View
-            style={[
-              styles.content,
-              isHost ? styles.hostContent : styles.guestContent
-            ]}
-          >
-            {content}
+        <View style={styles.item}>
+          <View style={styles.time}>
+            <View style={styles.timeWrapper}>
+              <Text style={styles.timeText} allowFontScaling={false}>
+                {data.formattedTime}
+              </Text>
+            </View>
+          </View>
+          <View style={isHost ? styles.hostContainer : styles.guestContainer}>
+            <Image source={defaultSource} style={{ width: 30, height: 30 }} />
+            <View
+              style={[
+                styles.content,
+                isHost ? styles.hostContent : styles.guestContent
+              ]}
+            >
+              {content}
+            </View>
           </View>
         </View>
       );
@@ -151,6 +229,25 @@ class DetailItem extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  item: {
+    marginBottom: 10
+  },
+  time: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  timeWrapper: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 4,
+    backgroundColor: 'rgba(167,167,167, .3)'
+  },
+  timeText: {
+    textAlign: 'center',
+    fontSize: 12,
+    height: 18,
+    lineHeight: 18
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'center'
@@ -189,8 +286,18 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#000'
   },
-  hostCard: {},
-  guestCard: {}
+  hostCard: {
+    width: 200
+  },
+  guestCard: {
+    width: 200
+  },
+  footer: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    flexDirection: 'row',
+    justifyContent: 'flex-end'
+  }
 });
 
 const box = StyleSheet.create({
@@ -205,6 +312,27 @@ const box = StyleSheet.create({
     backgroundColor: 'rgba(167,167,167, .3)',
     paddingLeft: 30,
     paddingRight: 30
+  }
+});
+
+const recommend = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5
+  },
+  right: {
+    marginLeft: 10
+  }
+});
+
+const button = StyleSheet.create({
+  common: {
+    fontSize: 13,
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginLeft: 10
   }
 });
 
